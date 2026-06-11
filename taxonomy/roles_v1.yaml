@@ -1,0 +1,66 @@
+# SkillPulse — Role Prototypes v1
+# -----------------------------------------------------------------------------
+# Used by the role classifier. A posting is assigned to the role whose prototype
+# its skill vector is most similar to. Title is a WEAK prior only (TW titles are
+# inconsistent), used as a tie-breaker or small bonus — never as the sole signal.
+#
+# Suggested scoring (the agent may refine):
+#   score(role) = sum over posting.skills of weight(role, skill)
+#                 + title_bonus if a title_keyword matches
+#   weight: core_skills = 2.0, supporting_skills = 1.0, else 0.
+#   Assign argmax; if max score below a floor -> role = "other".
+#
+# Roles in_cluster: true are the analysis targets. backend is the CONTROL group.
+# -----------------------------------------------------------------------------
+
+version: 1
+
+roles:
+
+  data_engineer:
+    in_cluster: true
+    title_keywords: ["data engineer", "資料工程", "數據工程", "資料平台", "data platform"]
+    core_skills: [sql, spark, airflow, etl, data_warehouse, kafka, hadoop, dbt]
+    supporting_skills: [python, bigquery, snowflake, redshift, nosql, mongodb, postgresql, docker, aws, gcp, azure]
+
+  data_scientist:
+    in_cluster: true
+    title_keywords: ["data scientist", "資料科學", "數據科學"]
+    core_skills: [statistics, machine_learning, scikit_learn, feature_engineering, ab_testing, python]
+    supporting_skills: [sql, pandas, numpy, xgboost, lightgbm, time_series, pytorch, tensorflow, data_viz]
+
+  data_analyst:
+    in_cluster: true
+    title_keywords: ["data analyst", "資料分析", "數據分析", "商業分析", "business analyst", "bi 分析"]
+    core_skills: [sql, tableau, power_bi, dashboard, data_viz, excel, statistics]
+    supporting_skills: [python, pandas, looker, ab_testing]
+
+  ml_engineer:
+    in_cluster: true
+    title_keywords: ["machine learning engineer", "ml engineer", "機器學習工程", "deep learning engineer", "深度學習工程"]
+    core_skills: [pytorch, tensorflow, machine_learning, deep_learning, docker, model_serving, mlflow]
+    supporting_skills: [python, scikit_learn, kubernetes, feature_store, cnn, rnn, transformer, nlp, computer_vision, ci_cd, sagemaker, vertex_ai]
+
+  algorithm_engineer:
+    in_cluster: true
+    title_keywords: ["algorithm engineer", "演算法工程", "research scientist", "研究員"]
+    core_skills: [machine_learning, deep_learning, pytorch, transformer, statistics]
+    supporting_skills: [python, nlp, computer_vision, cnn, rnn, time_series]
+
+  ai_engineer:
+    in_cluster: true
+    title_keywords: ["ai engineer", "ai 工程", "ai application", "ai 應用", "generative ai", "llm engineer", "genai"]
+    core_skills: [llm, rag, prompt_engineering, langchain, llamaindex, vector_db, model_apis, ai_agents]
+    supporting_skills: [python, embeddings, fine_tuning, lora, huggingface, fastapi, docker, model_serving]
+
+  backend:
+    in_cluster: false   # CONTROL GROUP — non-AI baseline for the premium comparison
+    title_keywords: ["backend", "back-end", "後端", "server engineer", "web engineer"]
+    core_skills: [nodejs, express, django, flask, spring, dotnet, php, rest_api, microservices]
+    supporting_skills: [python, java, golang, postgresql, mysql, redis, docker, kubernetes, aws]
+
+  other:
+    in_cluster: false
+    title_keywords: []
+    core_skills: []
+    supporting_skills: []

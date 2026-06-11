@@ -1,0 +1,151 @@
+# SkillPulse — Skill Taxonomy v1
+# -----------------------------------------------------------------------------
+# Purpose: canonical skill dictionary used by the extraction/normalization step.
+# This is a HYPOTHESIS to validate against real scraped JDs (top-down seed, then
+# bottom-up reconcile: add missed skills, filter buzzwords, fold in synonyms).
+#
+# Matching contract for the extractor:
+#   - Lowercase the JD text before matching English aliases. Keep Chinese as-is.
+#   - Match aliases as whole tokens / phrases (use word boundaries for short ones
+#     like "r", "go" to avoid false hits inside other words).
+#   - A skill with `require_context: true` counts ONLY if its alias appears within
+#     a requirements/skills context (e.g., inside the JD's 條件/技能/requirements
+#     section, or within ~N chars of a requirement cue). This is the buzzword filter
+#     for AI-era terms that companies sprinkle into boilerplate.
+#   - `ai_era: true` marks the GenAI + MLOps signal layer (facets 5 & 6). A posting
+#     is "AI-inflected" if it contains >=1 skill with ai_era: true.
+# -----------------------------------------------------------------------------
+
+version: 1
+
+facets:
+  1: { name: languages,        ai_era: false }
+  2: { name: data_processing,  ai_era: false }
+  3: { name: classical_ml,     ai_era: false }
+  4: { name: deep_learning,    ai_era: false }
+  5: { name: genai_llm,        ai_era: true  }   # ★ AI-era signal
+  6: { name: mlops,            ai_era: true  }   # ★ AI-era signal
+  7: { name: cloud,            ai_era: false }
+  8: { name: bi_business,      ai_era: false }
+  9: { name: web_backend,      ai_era: false }   # NOT cluster value vocab; used to
+                                                 # discriminate the Backend CONTROL group
+
+# Each skill: id (canonical), name (display), facet, optional ai_era override,
+# optional require_context, and aliases (bilingual; lowercase the English).
+skills:
+
+  # ---------- Facet 1: Languages ----------
+  - { id: python, name: Python, facet: 1, aliases: [python, py] }
+  - { id: sql, name: SQL, facet: 1, aliases: [sql, t-sql, pl/sql, ansi sql] }
+  - { id: r_lang, name: R, facet: 1, aliases: ["r語言", " r ", r programming] }
+  - { id: scala, name: Scala, facet: 1, aliases: [scala] }
+  - { id: java, name: Java, facet: 1, aliases: [java] }
+  - { id: golang, name: Go, facet: 1, aliases: [golang, "go語言"] }
+  - { id: bash, name: Bash/Shell, facet: 1, aliases: [bash, shell script, "shell 腳本"] }
+
+  # ---------- Facet 2: Data processing & storage ----------
+  - { id: pandas, name: pandas, facet: 2, aliases: [pandas] }
+  - { id: numpy, name: NumPy, facet: 2, aliases: [numpy] }
+  - { id: spark, name: Apache Spark, facet: 2, aliases: [spark, pyspark, "apache spark"] }
+  - { id: hadoop, name: Hadoop, facet: 2, aliases: [hadoop, hdfs, mapreduce] }
+  - { id: hive, name: Hive, facet: 2, aliases: [hive] }
+  - { id: kafka, name: Apache Kafka, facet: 2, aliases: [kafka, "apache kafka"] }
+  - { id: airflow, name: Airflow, facet: 2, aliases: [airflow, "apache airflow"] }
+  - { id: dbt, name: dbt, facet: 2, aliases: [dbt] }
+  - { id: etl, name: ETL/ELT, facet: 2, aliases: [etl, elt, "資料管線", data pipeline, "data pipeline"] }
+  - { id: data_warehouse, name: Data Warehouse, facet: 2, aliases: ["資料倉儲", data warehouse, "data warehouse", dwh] }
+  - { id: bigquery, name: BigQuery, facet: 2, aliases: [bigquery, "big query"] }
+  - { id: snowflake, name: Snowflake, facet: 2, aliases: [snowflake] }
+  - { id: redshift, name: Redshift, facet: 2, aliases: [redshift] }
+  - { id: nosql, name: NoSQL, facet: 2, aliases: [nosql] }
+  - { id: mongodb, name: MongoDB, facet: 2, aliases: [mongodb, mongo] }
+  - { id: redis, name: Redis, facet: 2, aliases: [redis] }
+  - { id: postgresql, name: PostgreSQL, facet: 2, aliases: [postgresql, postgres, psql] }
+  - { id: mysql, name: MySQL, facet: 2, aliases: [mysql] }
+  - { id: elasticsearch, name: Elasticsearch, facet: 2, aliases: [elasticsearch, elastic search] }
+
+  # ---------- Facet 3: Classical ML ----------
+  - { id: scikit_learn, name: scikit-learn, facet: 3, aliases: [scikit-learn, sklearn, "scikit learn"] }
+  - { id: xgboost, name: XGBoost, facet: 3, aliases: [xgboost] }
+  - { id: lightgbm, name: LightGBM, facet: 3, aliases: [lightgbm, lgbm] }
+  - { id: statistics, name: Statistics, facet: 3, aliases: ["統計", statistics, statistical] }
+  - { id: feature_engineering, name: Feature Engineering, facet: 3, aliases: ["特徵工程", feature engineering, "feature engineering"] }
+  - { id: ab_testing, name: A/B Testing, facet: 3, aliases: [a/b test, "a/b testing", ab test, "ab 測試"] }
+  - { id: machine_learning, name: Machine Learning (general), facet: 3, aliases: ["機器學習", machine learning, "machine learning", " ml "] }
+  - { id: time_series, name: Time Series, facet: 3, aliases: ["時間序列", time series, "time series"] }
+
+  # ---------- Facet 4: Deep learning ----------
+  - { id: pytorch, name: PyTorch, facet: 4, aliases: [pytorch, torch] }
+  - { id: tensorflow, name: TensorFlow, facet: 4, aliases: [tensorflow, "tensor flow", tf] }
+  - { id: keras, name: Keras, facet: 4, aliases: [keras] }
+  - { id: deep_learning, name: Deep Learning (general), facet: 4, aliases: ["深度學習", deep learning, "deep learning"] }
+  - { id: cnn, name: CNN, facet: 4, aliases: [cnn, convolutional] }
+  - { id: rnn, name: RNN/LSTM, facet: 4, aliases: [rnn, lstm, gru] }
+  - { id: transformer, name: Transformer, facet: 4, aliases: [transformer] }
+  - { id: nlp, name: NLP, facet: 4, aliases: [nlp, "自然語言處理", natural language processing] }
+  - { id: computer_vision, name: Computer Vision, facet: 4, aliases: ["電腦視覺", computer vision, "computer vision", cv] }
+
+  # ---------- Facet 5: ★ Generative AI / LLM (AI-era) ----------
+  - { id: llm, name: Large Language Models, facet: 5, require_context: true,
+      aliases: [llm, "large language model", "大型語言模型", "大語言模型", gpt, "生成式ai", "生成式 ai", "generative ai", "generative ai", genai, "生成式人工智慧"] }
+  - { id: rag, name: RAG, facet: 5, aliases: [rag, "retrieval augmented generation", "檢索增強"] }
+  - { id: prompt_engineering, name: Prompt Engineering, facet: 5, require_context: true,
+      aliases: ["prompt engineering", "prompt engineering", "提示工程", "prompt 設計"] }
+  - { id: fine_tuning, name: Fine-tuning, facet: 5, aliases: ["fine-tuning", "fine tuning", "微調", finetune] }
+  - { id: lora, name: LoRA / PEFT, facet: 5, aliases: [lora, peft, qlora] }
+  - { id: vector_db, name: Vector Database, facet: 5, aliases: ["vector db", "vector database", "向量資料庫", pgvector, milvus, pinecone, weaviate, faiss, chroma] }
+  - { id: embeddings, name: Embeddings, facet: 5, aliases: [embedding, embeddings, "向量嵌入"] }
+  - { id: langchain, name: LangChain, facet: 5, aliases: [langchain, "lang chain"] }
+  - { id: llamaindex, name: LlamaIndex, facet: 5, aliases: [llamaindex, "llama index"] }
+  - { id: ai_agents, name: AI Agents, facet: 5, require_context: true,
+      aliases: ["ai agent", "ai agents", "智能體", "代理人", agentic] }
+  - { id: model_apis, name: Foundation Model APIs, facet: 5, aliases: ["openai api", "openai", "claude api", anthropic, gemini, "azure openai"] }
+  - { id: huggingface, name: Hugging Face, facet: 5, aliases: ["hugging face", huggingface, transformers library] }
+  - { id: diffusion, name: Diffusion Models, facet: 5, aliases: ["diffusion model", "stable diffusion", "擴散模型"] }
+
+  # ---------- Facet 6: ★ MLOps / deployment (AI-era) ----------
+  # NOTE on dual-use infra: docker / kubernetes / ci_cd / fastapi are generic devops
+  # used by backend roles too. They get ai_era: false so they do NOT, on their own,
+  # mark a posting "AI-inflected" (which would pollute the Backend control group).
+  # The genuinely ML-specific tools (mlflow, model_serving, feature_store, kubeflow,
+  # wandb, model_monitoring) keep ai_era: true.
+  - { id: docker, name: Docker, facet: 6, ai_era: false, aliases: [docker, container] }
+  - { id: kubernetes, name: Kubernetes, facet: 6, ai_era: false, aliases: [kubernetes, k8s] }
+  - { id: fastapi, name: FastAPI, facet: 6, ai_era: false, aliases: [fastapi, "fast api"] }
+  - { id: ci_cd, name: CI/CD, facet: 6, ai_era: false, aliases: [ci/cd, "ci cd", "持續整合", "持續部署"] }
+  - { id: mlflow, name: MLflow, facet: 6, aliases: [mlflow] }
+  - { id: wandb, name: Weights & Biases, facet: 6, aliases: ["weights & biases", wandb, "weights and biases"] }
+  - { id: model_serving, name: Model Serving, facet: 6, require_context: true,
+      aliases: ["model serving", "模型部署", "model deployment", triton, bentoml, torchserve] }
+  - { id: model_monitoring, name: Model Monitoring, facet: 6, require_context: true,
+      aliases: ["model monitoring", "模型監控", "drift detection", "資料漂移"] }
+  - { id: feature_store, name: Feature Store, facet: 6, aliases: ["feature store", feast, "特徵商店"] }
+  - { id: kubeflow, name: Kubeflow, facet: 6, aliases: [kubeflow] }
+
+  # ---------- Facet 7: Cloud ----------
+  - { id: aws, name: AWS, facet: 7, aliases: [aws, "amazon web services"] }
+  - { id: gcp, name: GCP, facet: 7, aliases: [gcp, "google cloud", "google cloud platform"] }
+  - { id: azure, name: Azure, facet: 7, aliases: [azure, "microsoft azure"] }
+  - { id: sagemaker, name: SageMaker, facet: 7, aliases: [sagemaker] }
+  - { id: vertex_ai, name: Vertex AI, facet: 7, aliases: ["vertex ai", "vertex"] }
+  - { id: azure_ml, name: Azure ML, facet: 7, aliases: ["azure ml", "azure machine learning"] }
+  - { id: databricks, name: Databricks, facet: 7, aliases: [databricks] }
+
+  # ---------- Facet 8: BI / business ----------
+  - { id: tableau, name: Tableau, facet: 8, aliases: [tableau] }
+  - { id: power_bi, name: Power BI, facet: 8, aliases: ["power bi", powerbi] }
+  - { id: looker, name: Looker, facet: 8, aliases: [looker] }
+  - { id: dashboard, name: Dashboarding, facet: 8, aliases: [dashboard, "儀表板", "報表"] }
+  - { id: data_viz, name: Data Visualization, facet: 8, aliases: ["data visualization", "資料視覺化", "數據視覺化", matplotlib, seaborn, plotly] }
+  - { id: excel, name: Excel, facet: 8, aliases: [excel, "試算表"] }
+
+  # ---------- Facet 9: web/backend (CONTROL-group discriminators, not cluster value) ----------
+  - { id: nodejs, name: Node.js, facet: 9, aliases: [node.js, nodejs, "node js"] }
+  - { id: express, name: Express, facet: 9, aliases: [express.js, expressjs] }
+  - { id: django, name: Django, facet: 9, aliases: [django] }
+  - { id: flask, name: Flask, facet: 9, aliases: [flask] }
+  - { id: spring, name: Spring Boot, facet: 9, aliases: ["spring boot", springboot, spring] }
+  - { id: dotnet, name: .NET, facet: 9, aliases: [".net", "asp.net", dotnet] }
+  - { id: php, name: PHP, facet: 9, aliases: [php, laravel] }
+  - { id: rest_api, name: REST API, facet: 9, aliases: ["rest api", restful, "api 設計", graphql] }
+  - { id: microservices, name: Microservices, facet: 9, aliases: [microservice, microservices, "微服務"] }

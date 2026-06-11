@@ -1,0 +1,2 @@
+"""SkillPulse local MVP package."""
+
