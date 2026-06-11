@@ -207,11 +207,12 @@ def parse_salary(raw: str) -> SalaryInfo:
 
     text = raw.replace("，", ",")
 
-    if any(k in text for k in ("年薪", "/年", "per year", "annual")):
+    # Match yearly/hourly/monthly markers, including Cake's "/ 年" "/ 月" "/ 小時" suffix style.
+    if any(k in text for k in ("年薪", "/年", "/ 年", "per year", "annual", "/yr", "/ yr")):
         period = SalaryPeriod.yearly
-    elif any(k in text for k in ("時薪", "/hr", "per hour", "hourly")):
+    elif any(k in text for k in ("時薪", "/hr", "/ hr", "/小時", "/ 小時", "per hour", "hourly")):
         period = SalaryPeriod.hourly
-    elif any(k in text for k in ("月薪", "/月", "per month", "monthly")):
+    elif any(k in text for k in ("月薪", "/月", "/ 月", "per month", "monthly", "/mo", "/ mo")):
         period = SalaryPeriod.monthly
     else:
         period = SalaryPeriod.monthly  # TW default when a number is present w/o unit

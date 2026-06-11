@@ -7,5 +7,12 @@ venv/
 output/
 data/raw/events.jsonl
 data/raw/postings_collected.json
+data/raw/_debug_*
+data/raw/_smoke_*
+data/raw/_full_*
+data/raw/_extra_*
+data/raw/_cake_*
+data/raw/*.log
 data/lake/
+data/.playwright_profile/
 

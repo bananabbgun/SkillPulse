@@ -19,9 +19,10 @@ The sample run is offline: no network, no API key, no Kafka. It writes:
 - `output/marts/*.csv` and `output/marts/*.parquet`
 - `data/lake/*.parquet`
 
-If PySpark is installed, `run_all` uses Spark local mode. If PySpark is missing, it falls back to the same Python/pandas transformation so the demo remains runnable. To enforce Spark:
+If PySpark is installed, `run_all` uses Spark local mode. If PySpark is missing, it falls back to the same Python/pandas transformation so the demo remains runnable. To install and enforce Spark:
 
 ```powershell
+python -m pip install -r requirements-spark.txt
 python -m skillpulse.run_all --sample --require-spark
 ```
 
@@ -40,11 +41,24 @@ Best-effort live collection is explicit and rate-limited:
 python -m skillpulse.ingestion.collect --source 104 --keyword "Data Engineer" --keyword "資料工程師" --limit 20
 ```
 
-Cake requires Playwright:
+If 104 returns a Cloudflare/browser challenge, use the manual URL fallback:
+
+1. Open 104 in your normal browser.
+2. Search for the target role.
+3. Copy several job detail URLs into `data/raw/104_urls.txt`, one URL per line.
+4. Import those detail pages:
+
+```powershell
+python -m skillpulse.ingestion.collect --source 104 --url-file data/raw/104_urls.txt --headed-browser
+python -m skillpulse.run_all --input data/raw/postings_collected.json
+```
+
+104 browser fallback and Cake collection require Playwright:
 
 ```powershell
 python -m pip install -r requirements-scraping.txt
 python -m playwright install chromium
+python -m skillpulse.ingestion.collect --source 104 --keyword "Data Engineer" --limit 20 --headed-browser
 python -m skillpulse.ingestion.collect --source cake --keyword "AI Engineer" --limit 20
 ```
 

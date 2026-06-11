@@ -1,0 +1,2 @@
+# Paste one 104 job URL per line, for example:
+# https://www.104.com.tw/job/xxxxx

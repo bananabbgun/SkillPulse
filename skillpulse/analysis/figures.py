@@ -45,8 +45,11 @@ def write_figure_2(df: pd.DataFrame, path: Path) -> None:
     fig, ax = plt.subplots(figsize=(10.5, 5.8))
     non_ai = pivot.get("non_ai", pd.Series(index=pivot.index, dtype=float))
     ai = pivot.get("ai_inflected", pd.Series(index=pivot.index, dtype=float))
-    ax.bar([pos - width / 2 for pos in x], non_ai, width=width, label="Non-AI", color="#94a3b8")
-    ax.bar([pos + width / 2 for pos in x], ai, width=width, label="AI-inflected", color="#0f766e")
+    # matplotlib bar() rejects None values; coerce to NaN so empty bars are simply not drawn.
+    non_ai_vals = pd.to_numeric(non_ai, errors="coerce").fillna(0)
+    ai_vals = pd.to_numeric(ai, errors="coerce").fillna(0)
+    ax.bar([pos - width / 2 for pos in x], non_ai_vals, width=width, label="Non-AI", color="#94a3b8")
+    ax.bar([pos + width / 2 for pos in x], ai_vals, width=width, label="AI-inflected", color="#0f766e")
     ax.set_ylabel("Median monthly salary (NTD)")
     ax.set_title("Figure 2. AI Salary Premium vs Backend Control")
     ax.set_xticks(list(x))

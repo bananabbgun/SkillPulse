@@ -6,7 +6,7 @@ from typing import List
 
 from skillpulse.ingestion.events import append_event_log, write_posting_array
 from skillpulse.ingestion.sources.cake import collect_cake
-from skillpulse.ingestion.sources.job104 import collect_104
+from skillpulse.ingestion.sources.job104 import collect_104, collect_104_urls, read_urls_file
 from skillpulse.paths import RAW_DIR, SAMPLE_POSTINGS
 from skillpulse.processing.pipeline import load_raw_postings
 from skillpulse.schema import RawPosting
@@ -25,7 +25,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sample", action="store_true", help="Append bundled fixtures instead of using the network.")
     parser.add_argument("--source", choices=["104", "cake"], action="append", default=[], help="Live source to collect.")
     parser.add_argument("--keyword", action="append", default=[], help="Keyword to search; repeatable.")
+    parser.add_argument(
+        "--url-file",
+        type=Path,
+        default=None,
+        help="Newline-delimited 104 job URLs to import through Playwright.",
+    )
     parser.add_argument("--limit", type=int, default=20, help="Max postings per keyword per source.")
+    parser.add_argument(
+        "--headed-browser",
+        action="store_true",
+        help="Run Playwright browser fallbacks with a visible browser window.",
+    )
+    parser.add_argument(
+        "--chrome-cdp",
+        type=int,
+        default=None,
+        metavar="PORT",
+        help=(
+            "Attach to an already-running Chrome via CDP on this port. "
+            "Start Chrome first with: "
+            "chrome.exe --remote-debugging-port=9222 --user-data-dir=\"%%TEMP%%\\\\skillpulse-chrome\""
+        ),
+    )
     parser.add_argument("--event-log", type=Path, default=RAW_DIR / "events.jsonl")
     parser.add_argument("--out", type=Path, default=RAW_DIR / "postings_collected.json")
     return parser.parse_args()
@@ -40,7 +62,23 @@ def main() -> None:
         postings.extend(load_raw_postings(SAMPLE_POSTINGS))
     else:
         if "104" in args.source:
-            postings.extend(collect_104(keywords, limit_per_keyword=args.limit))
+            if args.url_file:
+                postings.extend(
+                    collect_104_urls(
+                        read_urls_file(args.url_file),
+                        headed=args.headed_browser,
+                        cdp_port=args.chrome_cdp,
+                    )
+                )
+            else:
+                postings.extend(
+                    collect_104(
+                        keywords,
+                        limit_per_keyword=args.limit,
+                        headed_browser=args.headed_browser,
+                        cdp_port=args.chrome_cdp,
+                    )
+                )
         if "cake" in args.source:
             postings.extend(collect_cake(keywords, limit_per_keyword=args.limit))
 
