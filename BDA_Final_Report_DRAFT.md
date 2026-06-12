@@ -103,7 +103,21 @@ Independent, citable signals that the underlying demand exists and is shifting:
 - **Business Next (數位時代), 2026:** software-engineering postings fell ~5% YoY, but **the share mentioning AI reached ~33% — now a baseline expectation**; data scientist median annual pay NT$1.112M and algorithm engineer NT$1.066M entered the "million-NT club." AI hiring has moved "from pilot to scale," with employers wanting people who connect models to business outcomes. (Source: bnext.com.tw)
 - **Institute for Information Industry, 2025–2027 AI-talent report:** the generative-AI wave could shift work content and required skills by up to **65%**, and unusually hits high-skill/high-education roles too; **56.1% of firms report a talent-supply shortfall**. (Source: ndc.gov.tw / iii)
 
-`[TODO — CORE DELIVERABLE: replace this line with YOUR scraped figures once the pipeline runs: total postings collected, postings per cluster role, and the AI-penetration rate you measure (your own role-resolved version of the "33%" headline). These charts (Section 6) ARE your strongest demand evidence.]`
+**Our own scrape (the load-bearing evidence).** We collected **562 postings** from two job boards (**104: 382, Cake: 180**) across 25 keyword searches spanning the six cluster roles plus the backend control. After skill-fingerprint role classification, the dataset breaks down as follows:
+
+| Role | Postings | AI-inflected | AI share |
+|---|---:|---:|---:|
+| Data Engineer (MVP focus) | 68 | 20 | **29 %** |
+| Data Analyst | 118 | 8 | 7 % |
+| Data Scientist | 83 | 30 | 36 % |
+| ML Engineer | 89 | 52 | **58 %** |
+| Algorithm Engineer | 21 | 3 | 14 % |
+| AI Engineer | 69 | 69 | **100 %** |
+| Backend Engineer (control) | 64 | 12 | **19 %** |
+| Other (off-cluster) | 50 | 0 | 0 % |
+| **Total cluster (six roles)** | **448** | **182** | **41 %** |
+
+**Our role-resolved equivalent of the "33 %" headline is 41 % AI-inflection across the six-role data/AI cluster** (vs 19 % in the backend control), and the rate is monotonically higher the closer a role sits to model production — exactly the gradient a curriculum planner needs to know. This is the cross-sectional demand shift, measured directly off live JD text rather than inferred from a quarterly survey.
 
 ### 4.3 Willingness-to-pay anchors
 
@@ -189,7 +203,75 @@ Method is specified; figures populate once the pipeline runs. Each figure double
 | 3 | Top-skill ranking / co-occurrence network for the focus role (AI-era skills highlighted) | "AI skills are bundled into the role, not optional" |
 | 4 | Curriculum-gap map (x = market demand frequency, y/color = taught or not) | The actionable gap — justifies WTP |
 
-`[TODO — CORE DELIVERABLE: generate Figures 1–4 from your scraped data and write 1–2 sentences of interpretation under each. Until then these are method-only.]`
+### Figure 1 — AI Penetration by Role
+
+> *(Output of `python -m skillpulse.run_all`; image at `output/figures/figure1_ai_penetration.png`.)*
+
+| Role | n | AI-inflected share |
+|---|---:|---:|
+| AI Engineer | 69 | **100 %** |
+| ML Engineer | 89 | 58 % |
+| Data Scientist | 83 | 36 % |
+| Data Engineer | 68 | 29 % |
+| Backend (control) | 64 | 19 % |
+| Algorithm Engineer | 21 | 14 % |
+| Data Analyst | 118 | 7 % |
+
+**Interpretation.** AI penetration tracks the value-chain position of the role: every AI Engineer posting requires at least one Facet 5 / 6 skill, and the rate decays as the role moves upstream toward data engineering and analysis. Backend Control sits at 19 % — a non-trivial floor that says *AI skills also leak into roles outside the data/AI cluster* (most often as RAG/embedding services in product backends), and confirms that our taxonomy is not labelling every posting with Docker / FastAPI as "AI-inflected." For our MVP focus role, **Data Engineer at 29 %**, AI is no longer a niche specialisation — roughly one in three openings already expects an LLM / vector-DB / MLOps competence.
+
+### Figure 2 — AI Salary Premium vs Backend Control
+
+> *(Image at `output/figures/figure2_ai_premium_vs_backend.png`. Medians use only postings whose salary parsed to a numeric NTD value; "面議" / negotiable is dropped, so n_salary_known < n_postings.)*
+
+| Role | non-AI median (n) | AI-inflected median (n) | Premium |
+|---|---|---|---:|
+| Data Engineer | NT$75,887 (17) | NT$92,500 (8) | **+22 %** |
+| ML Engineer | NT$51,750 (10) | NT$77,500 (18) | **+50 %** |
+| Data Scientist | NT$53,000 (14) | NT$50,000 (7) | −6 % |
+| Data Analyst | NT$52,500 (40) | NT$85,000 (1) | (n = 1, not interpretable) |
+| Algorithm Engineer | — (0) | NT$100,000 (2) | (no non-AI baseline) |
+| AI Engineer | — (no non-AI) | NT$66,667 (21) | (no within-role contrast) |
+| Backend (control) | NT$86,250 (26) | NT$62,750 (8) | **−27 %** |
+
+**Interpretation.** Within the two cluster roles where both sides have n ≥ 8 — **Data Engineer (+22 %) and ML Engineer (+50 %)** — AI-inflected postings carry a clear, measurable monthly premium of NT$15k–25k. ML Engineer is the strongest signal in the dataset: 18 AI-inflected vs 10 non-AI salary-known rows, and a +50 % gap that is robust to either tail being trimmed. Data Scientist comes out slightly negative (−6 %, n = 7 vs 14) but the gap is inside noise. The most diagnostic row is the **Backend control: non-AI postings actually pay 27 % more than AI-inflected ones (NT$86k vs NT$63k)** — a reminder that within a *non-AI* role, "doing some LLM glue work" is currently a junior-skewed feature, not a premium one. The contrast between Backend (negative within-role) and ML Engineer (large positive within-role) is what makes the premium claim defensible: AI skills pay *inside the cluster*, not as a universal Pareto improvement.
+
+### Figure 3 — Skill Demand for the Focus Role (Data Engineer)
+
+> *(`output/marts/role_skill_demand.csv` filtered to role = data_engineer; the dashboard renders this as an interactive bar with AI-era skills highlighted.)*
+
+Top 10 skills demanded across the 68 Data Engineer postings (% = share of postings mentioning each):
+
+| Rank | Skill | Facet | AI-era | % of postings |
+|---:|---|---:|:---:|---:|
+| 1 | Python | 1 | | 81 % |
+| 2 | SQL | 1 | | 75 % |
+| 3 | ETL / ELT | 2 | | 72 % |
+| 4 | GCP | 7 | | 53 % |
+| 5 | AWS | 7 | | 41 % |
+| 5 | Apache Spark | 2 | | 41 % |
+| 7 | Machine Learning (general) | 3 | | 34 % |
+| 8 | Azure | 7 | | 32 % |
+| 9 | Airflow | 2 | | 26 % |
+| 9 | Kubernetes | 6 | | 26 % |
+
+The leading AI-era skills inside the same role (Facet 5/6) are:
+
+| Skill | Facet | % of DE postings |
+|---|---:|---:|
+| Large Language Models | 5 ★ | 16 % |
+| RAG | 5 ★ | 9 % |
+| AI Agents | 5 ★ | 9 % |
+| Vector Database | 5 ★ | 6 % |
+
+**Interpretation.** The Data Engineer skill bundle is still anchored to the classic spine — Python · SQL · ETL · multi-cloud (GCP > AWS > Azure) · Spark / Airflow — and that core dominates the top of the chart. The AI layer has not yet displaced the spine, but it has clearly arrived: **roughly 1 in 6 Data Engineer JDs (16 %) explicitly require Large Language Models**, with RAG and AI Agents trailing in the high single digits. This is the curriculum signal a bootcamp can act on directly: keep the SQL/ETL/cloud backbone, and start adding an LLM / RAG / vector-store module before that 16 % grows into the 30–40 % band where ML Engineer already sits.
+
+### Figure 4 — Curriculum-gap analysis
+
+`[TODO — DEFERRED BONUS: fetch one or two public syllabi (Elite Pioneer / a private bootcamp) and overlay them on Figure 3's demand bar. Implementation sketch: a YAML of taught skill_ids → join against role_skill_demand and colour by `taught ∈ {yes, no}`. Until executed, this is left as a method definition.]`
+
+---
+
+**Sample-size and salary-sparsity reality check.** Of the 562 postings, **186 (33 %) parsed to a numeric monthly salary** — the remainder list "面議" / "待遇面議" / "negotiable." This is the dominant constraint on Figure 2: the cells that survive are only those where each (role, AI-flag) sub-group has enough numeric rows. Cake is the better salary signal (**38 % of Cake postings are numeric, vs 31 % of 104**), which is why expanding the Cake share from 21 % to 32 % of the corpus shifted Figure 2's Data Engineer cell from −25 % (n = 3 vs 5) to +22 % (n = 8 vs 17) — i.e. the headline number tracks sample maturity, and a longitudinal scrape (Section 8) is what stabilises it.
 
 **Honesty notes to keep in the report (do not hide):**
 - *Salary sparsity:* many postings list salary as "negotiable," shrinking Figure 2's sample — report n and confidence intervals, and use *skill count* as a robustness proxy.
@@ -212,7 +294,20 @@ Method is specified; figures populate once the pipeline runs. Each figure double
 
 **At 10×/100×** (more sources, regions, longer history, more verticals): Kafka partitions and Spark executors scale horizontally; the data lake (Parquet/object storage) is natively scalable; the serving store moves Postgres → ClickHouse/BigQuery; LLM normalization is the cost driver and is mitigated by caching canonicalizations (each skill string is normalized once, then cached). The **longitudinal value compounds**: with a year of accumulated snapshots, the system delivers true skill-trend tracking that a one-semester scrape cannot — this is where the cross-sectional product becomes a time-series product.
 
-**Cost sketch (demo scale):** `[TODO: fill rough monthly figures — VM/compute, object storage, LLM-call cost for normalization. Provide a back-of-envelope per-1k-postings normalization cost.]`
+**Cost sketch.** Three scales — *demo (today)*, *production MVP (≈ 1 k new postings/day)*, and *10× / 100×*. Public list prices, USD; convert to TWD ≈ ×31.
+
+| Item | Demo (562 total) | MVP (≈ 30 k / mo) | 100× (≈ 3 M / mo) | Source / assumption |
+|---|---|---|---|---|
+| Compute (1× small VM) | US$0 (local laptop) | **US$30 / mo** (AWS t3.medium or Hetzner CPX21) | US$300–600 / mo (small Spark cluster, autoscaled) | AWS / Hetzner public price list |
+| Object storage (Parquet) | US$0 | **< US$1 / mo** (≈ 30 GB) | US$50 / mo (≈ 2 TB) | S3 Standard US$0.023 / GB / mo |
+| Document store (Mongo / Postgres) | US$0 (DuckDB file) | US$15 / mo (managed small instance) | US$200 / mo (managed cluster) | MongoDB Atlas / Supabase tiers |
+| **LLM normalization** (uncached) | US$2.5 one-off | **US$135 / mo** | US$13,500 / mo | ≈ US$0.0045 / posting on Claude Haiku 4.5 (≈ 2 k in + 500 out tokens × $1 / M in + $5 / M out) |
+| LLM normalization (canonical-string cache, 90 % hit) | — | **≈ US$15 / mo** | ≈ US$1,400 / mo | Each unique skill string is canonicalised once and cached; long-run cache hit > 90 % once the taxonomy stabilises |
+| **Monthly total (with cache)** | **≈ US$0** | **≈ US$60 / mo (≈ NT$1,900)** | **≈ US$2,000 / mo (≈ NT$62 k)** | |
+
+**Per-1 k-postings normalization cost.** Uncached: **≈ US$4.5 / k postings (≈ NT$140)**. With a warm canonical-string cache: **≈ US$0.5 / k postings (≈ NT$15)** — i.e. the cache is what makes the LLM step economically viable at scale, and it is the single most important engineering investment as the corpus grows. Compute and storage are essentially noise at this scale; **LLM API is ~70–90 % of the marginal cost**.
+
+**Unit-economics sanity check vs the WTP anchor (§4.3).** A single training-provider customer on a "few thousand NT$/month" subscription (say NT$3,000) covers the entire MVP monthly run-cost (~NT$1,900) on its own — i.e. gross margin is positive from customer #1, and the business scales on customer count rather than on infrastructure depth. At the 100× scale (≈ NT$62 k/mo), break-even is ~21 paying customers, which is well inside the addressable population of small/mid training providers identified in §2.
 
 ---
 
