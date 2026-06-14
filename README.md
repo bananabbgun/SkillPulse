@@ -6,11 +6,15 @@ The locked MVP focus role is **Data Engineer**, with the full data/AI cluster re
 
 ## Quick Start
 
+Requires Python 3.9+ (the data contract uses pydantic v2).
+
 ```powershell
 python -m pip install -r requirements.txt
 python -m skillpulse.run_all --sample
 python -m streamlit run skillpulse/dashboard/app.py
 ```
+
+After the third command, open <http://localhost:8501> in a browser.
 
 The sample run is offline: no network, no API key, no Kafka. It writes:
 

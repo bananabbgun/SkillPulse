@@ -1,0 +1,9 @@
+role,n_postings,ai_inflected,ai_inflected_share,role_label
+data_engineer,68,20,0.29411764705882354,Data Engineer
+data_analyst,118,8,0.06779661016949153,Data Analyst
+data_scientist,83,30,0.3614457831325301,Data Scientist
+ml_engineer,89,52,0.5842696629213483,ML Engineer
+algorithm_engineer,21,3,0.14285714285714285,Algorithm Engineer
+ai_engineer,69,69,1.0,AI Engineer
+backend,64,12,0.1875,Backend Control
+other,50,0,0.0,Other

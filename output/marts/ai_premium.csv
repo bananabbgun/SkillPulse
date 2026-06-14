@@ -1,0 +1,14 @@
+role,group,n,n_salary_known,median_monthly_ntd,mean_skill_count,role_label
+data_engineer,ai_inflected,20,8,92500.0,13.1,Data Engineer
+data_engineer,non_ai,48,17,75886.5,8.9375,Data Engineer
+data_analyst,ai_inflected,8,1,85000.0,7.75,Data Analyst
+data_analyst,non_ai,110,40,52500.0,4.363636363636363,Data Analyst
+data_scientist,ai_inflected,30,7,50000.0,9.566666666666666,Data Scientist
+data_scientist,non_ai,53,14,53000.0,4.490566037735849,Data Scientist
+ml_engineer,ai_inflected,52,18,77500.0,10.692307692307692,ML Engineer
+ml_engineer,non_ai,37,10,51750.0,6.351351351351352,ML Engineer
+algorithm_engineer,ai_inflected,3,2,100000.0,8.666666666666666,Algorithm Engineer
+algorithm_engineer,non_ai,18,0,,4.666666666666667,Algorithm Engineer
+ai_engineer,ai_inflected,69,21,66666.66666666667,9.579710144927537,AI Engineer
+backend,ai_inflected,12,8,62750.0,10.166666666666666,Backend Control
+backend,non_ai,52,26,86250.0,8.903846153846153,Backend Control

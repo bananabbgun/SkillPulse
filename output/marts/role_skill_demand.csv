@@ -1,0 +1,391 @@
+role,skill_id,name,facet,ai_era,count,pct_of_role,role_label
+data_engineer,python,Python,1,False,55,0.8088235294117647,Data Engineer
+data_engineer,sql,SQL,1,False,51,0.75,Data Engineer
+data_engineer,etl,ETL/ELT,2,False,49,0.7205882352941176,Data Engineer
+data_engineer,gcp,GCP,7,False,36,0.5294117647058824,Data Engineer
+data_engineer,aws,AWS,7,False,28,0.4117647058823529,Data Engineer
+data_engineer,spark,Apache Spark,2,False,28,0.4117647058823529,Data Engineer
+data_engineer,machine_learning,Machine Learning (general),3,False,23,0.3382352941176471,Data Engineer
+data_engineer,azure,Azure,7,False,22,0.3235294117647059,Data Engineer
+data_engineer,airflow,Airflow,2,False,18,0.2647058823529412,Data Engineer
+data_engineer,kubernetes,Kubernetes,6,False,18,0.2647058823529412,Data Engineer
+data_engineer,ci_cd,CI/CD,6,False,17,0.25,Data Engineer
+data_engineer,docker,Docker,6,False,17,0.25,Data Engineer
+data_engineer,java,Java,1,False,17,0.25,Data Engineer
+data_engineer,mongodb,MongoDB,2,False,15,0.22058823529411764,Data Engineer
+data_engineer,mysql,MySQL,2,False,15,0.22058823529411764,Data Engineer
+data_engineer,data_warehouse,Data Warehouse,2,False,14,0.20588235294117646,Data Engineer
+data_engineer,postgresql,PostgreSQL,2,False,14,0.20588235294117646,Data Engineer
+data_engineer,kafka,Apache Kafka,2,False,13,0.19117647058823528,Data Engineer
+data_engineer,databricks,Databricks,7,False,13,0.19117647058823528,Data Engineer
+data_engineer,bigquery,BigQuery,2,False,11,0.16176470588235295,Data Engineer
+data_engineer,llm,Large Language Models,5,True,11,0.16176470588235295,Data Engineer
+data_engineer,nosql,NoSQL,2,False,11,0.16176470588235295,Data Engineer
+data_engineer,hadoop,Hadoop,2,False,10,0.14705882352941177,Data Engineer
+data_engineer,statistics,Statistics,3,False,10,0.14705882352941177,Data Engineer
+data_engineer,dashboard,Dashboarding,8,False,9,0.1323529411764706,Data Engineer
+data_engineer,r_lang,R,1,False,8,0.11764705882352941,Data Engineer
+data_engineer,dbt,dbt,2,False,7,0.10294117647058823,Data Engineer
+data_engineer,pandas,pandas,2,False,7,0.10294117647058823,Data Engineer
+data_engineer,dotnet,.NET,9,False,6,0.08823529411764706,Data Engineer
+data_engineer,ai_agents,AI Agents,5,True,6,0.08823529411764706,Data Engineer
+data_engineer,deep_learning,Deep Learning (general),4,False,6,0.08823529411764706,Data Engineer
+data_engineer,nlp,NLP,4,False,6,0.08823529411764706,Data Engineer
+data_engineer,numpy,NumPy,2,False,6,0.08823529411764706,Data Engineer
+data_engineer,power_bi,Power BI,8,False,6,0.08823529411764706,Data Engineer
+data_engineer,rag,RAG,5,True,6,0.08823529411764706,Data Engineer
+data_engineer,excel,Excel,8,False,5,0.07352941176470588,Data Engineer
+data_engineer,scala,Scala,1,False,5,0.07352941176470588,Data Engineer
+data_engineer,tableau,Tableau,8,False,5,0.07352941176470588,Data Engineer
+data_engineer,computer_vision,Computer Vision,4,False,4,0.058823529411764705,Data Engineer
+data_engineer,data_viz,Data Visualization,8,False,4,0.058823529411764705,Data Engineer
+data_engineer,elasticsearch,Elasticsearch,2,False,4,0.058823529411764705,Data Engineer
+data_engineer,php,PHP,9,False,4,0.058823529411764705,Data Engineer
+data_engineer,redis,Redis,2,False,4,0.058823529411764705,Data Engineer
+data_engineer,tensorflow,TensorFlow,4,False,4,0.058823529411764705,Data Engineer
+data_engineer,vector_db,Vector Database,5,True,4,0.058823529411764705,Data Engineer
+data_engineer,vertex_ai,Vertex AI,7,False,4,0.058823529411764705,Data Engineer
+data_engineer,bash,Bash/Shell,1,False,3,0.04411764705882353,Data Engineer
+data_engineer,fastapi,FastAPI,6,False,3,0.04411764705882353,Data Engineer
+data_engineer,golang,Go,1,False,3,0.04411764705882353,Data Engineer
+data_engineer,hive,Hive,2,False,3,0.04411764705882353,Data Engineer
+data_engineer,model_serving,Model Serving,6,True,3,0.04411764705882353,Data Engineer
+data_engineer,prompt_engineering,Prompt Engineering,5,True,3,0.04411764705882353,Data Engineer
+data_engineer,pytorch,PyTorch,4,False,3,0.04411764705882353,Data Engineer
+data_engineer,transformer,Transformer,4,False,3,0.04411764705882353,Data Engineer
+data_engineer,feature_engineering,Feature Engineering,3,False,2,0.029411764705882353,Data Engineer
+data_engineer,flask,Flask,9,False,2,0.029411764705882353,Data Engineer
+data_engineer,model_apis,Foundation Model APIs,5,True,2,0.029411764705882353,Data Engineer
+data_engineer,kubeflow,Kubeflow,6,True,2,0.029411764705882353,Data Engineer
+data_engineer,mlflow,MLflow,6,True,2,0.029411764705882353,Data Engineer
+data_engineer,rest_api,REST API,9,False,2,0.029411764705882353,Data Engineer
+data_engineer,redshift,Redshift,2,False,2,0.029411764705882353,Data Engineer
+data_engineer,snowflake,Snowflake,2,False,2,0.029411764705882353,Data Engineer
+data_engineer,spring,Spring Boot,9,False,2,0.029411764705882353,Data Engineer
+data_engineer,ab_testing,A/B Testing,3,False,1,0.014705882352941176,Data Engineer
+data_engineer,azure_ml,Azure ML,7,False,1,0.014705882352941176,Data Engineer
+data_engineer,django,Django,9,False,1,0.014705882352941176,Data Engineer
+data_engineer,embeddings,Embeddings,5,True,1,0.014705882352941176,Data Engineer
+data_engineer,feature_store,Feature Store,6,True,1,0.014705882352941176,Data Engineer
+data_engineer,fine_tuning,Fine-tuning,5,True,1,0.014705882352941176,Data Engineer
+data_engineer,langchain,LangChain,5,True,1,0.014705882352941176,Data Engineer
+data_engineer,lightgbm,LightGBM,3,False,1,0.014705882352941176,Data Engineer
+data_engineer,llamaindex,LlamaIndex,5,True,1,0.014705882352941176,Data Engineer
+data_engineer,looker,Looker,8,False,1,0.014705882352941176,Data Engineer
+data_engineer,microservices,Microservices,9,False,1,0.014705882352941176,Data Engineer
+data_engineer,nodejs,Node.js,9,False,1,0.014705882352941176,Data Engineer
+data_engineer,scikit_learn,scikit-learn,3,False,1,0.014705882352941176,Data Engineer
+data_analyst,excel,Excel,8,False,68,0.576271186440678,Data Analyst
+data_analyst,dashboard,Dashboarding,8,False,53,0.4491525423728814,Data Analyst
+data_analyst,python,Python,1,False,50,0.423728813559322,Data Analyst
+data_analyst,sql,SQL,1,False,49,0.4152542372881356,Data Analyst
+data_analyst,tableau,Tableau,8,False,43,0.3644067796610169,Data Analyst
+data_analyst,power_bi,Power BI,8,False,41,0.3474576271186441,Data Analyst
+data_analyst,statistics,Statistics,3,False,41,0.3474576271186441,Data Analyst
+data_analyst,r_lang,R,1,False,27,0.2288135593220339,Data Analyst
+data_analyst,data_viz,Data Visualization,8,False,17,0.1440677966101695,Data Analyst
+data_analyst,machine_learning,Machine Learning (general),3,False,15,0.1271186440677966,Data Analyst
+data_analyst,looker,Looker,8,False,14,0.11864406779661017,Data Analyst
+data_analyst,mysql,MySQL,2,False,13,0.11016949152542373,Data Analyst
+data_analyst,etl,ETL/ELT,2,False,10,0.0847457627118644,Data Analyst
+data_analyst,azure,Azure,7,False,9,0.07627118644067797,Data Analyst
+data_analyst,mongodb,MongoDB,2,False,8,0.06779661016949153,Data Analyst
+data_analyst,aws,AWS,7,False,7,0.059322033898305086,Data Analyst
+data_analyst,dotnet,.NET,9,False,6,0.05084745762711865,Data Analyst
+data_analyst,gcp,GCP,7,False,6,0.05084745762711865,Data Analyst
+data_analyst,bigquery,BigQuery,2,False,5,0.0423728813559322,Data Analyst
+data_analyst,data_warehouse,Data Warehouse,2,False,5,0.0423728813559322,Data Analyst
+data_analyst,databricks,Databricks,7,False,5,0.0423728813559322,Data Analyst
+data_analyst,java,Java,1,False,5,0.0423728813559322,Data Analyst
+data_analyst,llm,Large Language Models,5,True,4,0.03389830508474576,Data Analyst
+data_analyst,postgresql,PostgreSQL,2,False,4,0.03389830508474576,Data Analyst
+data_analyst,pandas,pandas,2,False,4,0.03389830508474576,Data Analyst
+data_analyst,ab_testing,A/B Testing,3,False,3,0.025423728813559324,Data Analyst
+data_analyst,ai_agents,AI Agents,5,True,3,0.025423728813559324,Data Analyst
+data_analyst,spark,Apache Spark,2,False,3,0.025423728813559324,Data Analyst
+data_analyst,computer_vision,Computer Vision,4,False,2,0.01694915254237288,Data Analyst
+data_analyst,deep_learning,Deep Learning (general),4,False,2,0.01694915254237288,Data Analyst
+data_analyst,numpy,NumPy,2,False,2,0.01694915254237288,Data Analyst
+data_analyst,snowflake,Snowflake,2,False,2,0.01694915254237288,Data Analyst
+data_analyst,time_series,Time Series,3,False,2,0.01694915254237288,Data Analyst
+data_analyst,airflow,Airflow,2,False,1,0.00847457627118644,Data Analyst
+data_analyst,ci_cd,CI/CD,6,False,1,0.00847457627118644,Data Analyst
+data_analyst,docker,Docker,6,False,1,0.00847457627118644,Data Analyst
+data_analyst,embeddings,Embeddings,5,True,1,0.00847457627118644,Data Analyst
+data_analyst,feature_engineering,Feature Engineering,3,False,1,0.00847457627118644,Data Analyst
+data_analyst,model_apis,Foundation Model APIs,5,True,1,0.00847457627118644,Data Analyst
+data_analyst,golang,Go,1,False,1,0.00847457627118644,Data Analyst
+data_analyst,hadoop,Hadoop,2,False,1,0.00847457627118644,Data Analyst
+data_analyst,nlp,NLP,4,False,1,0.00847457627118644,Data Analyst
+data_analyst,nosql,NoSQL,2,False,1,0.00847457627118644,Data Analyst
+data_analyst,php,PHP,9,False,1,0.00847457627118644,Data Analyst
+data_analyst,rag,RAG,5,True,1,0.00847457627118644,Data Analyst
+data_analyst,spring,Spring Boot,9,False,1,0.00847457627118644,Data Analyst
+data_analyst,dbt,dbt,2,False,1,0.00847457627118644,Data Analyst
+data_scientist,python,Python,1,False,70,0.8433734939759037,Data Scientist
+data_scientist,machine_learning,Machine Learning (general),3,False,60,0.7228915662650602,Data Scientist
+data_scientist,statistics,Statistics,3,False,43,0.5180722891566265,Data Scientist
+data_scientist,sql,SQL,1,False,33,0.39759036144578314,Data Scientist
+data_scientist,llm,Large Language Models,5,True,23,0.27710843373493976,Data Scientist
+data_scientist,scikit_learn,scikit-learn,3,False,20,0.24096385542168675,Data Scientist
+data_scientist,r_lang,R,1,False,18,0.21686746987951808,Data Scientist
+data_scientist,pandas,pandas,2,False,16,0.1927710843373494,Data Scientist
+data_scientist,numpy,NumPy,2,False,15,0.18072289156626506,Data Scientist
+data_scientist,pytorch,PyTorch,4,False,15,0.18072289156626506,Data Scientist
+data_scientist,feature_engineering,Feature Engineering,3,False,14,0.1686746987951807,Data Scientist
+data_scientist,gcp,GCP,7,False,13,0.1566265060240964,Data Scientist
+data_scientist,nlp,NLP,4,False,13,0.1566265060240964,Data Scientist
+data_scientist,tensorflow,TensorFlow,4,False,13,0.1566265060240964,Data Scientist
+data_scientist,aws,AWS,7,False,11,0.13253012048192772,Data Scientist
+data_scientist,deep_learning,Deep Learning (general),4,False,11,0.13253012048192772,Data Scientist
+data_scientist,ai_agents,AI Agents,5,True,9,0.10843373493975904,Data Scientist
+data_scientist,azure,Azure,7,False,8,0.0963855421686747,Data Scientist
+data_scientist,data_viz,Data Visualization,8,False,8,0.0963855421686747,Data Scientist
+data_scientist,mysql,MySQL,2,False,6,0.07228915662650602,Data Scientist
+data_scientist,bigquery,BigQuery,2,False,5,0.060240963855421686,Data Scientist
+data_scientist,computer_vision,Computer Vision,4,False,5,0.060240963855421686,Data Scientist
+data_scientist,docker,Docker,6,False,5,0.060240963855421686,Data Scientist
+data_scientist,etl,ETL/ELT,2,False,5,0.060240963855421686,Data Scientist
+data_scientist,java,Java,1,False,5,0.060240963855421686,Data Scientist
+data_scientist,model_serving,Model Serving,6,True,5,0.060240963855421686,Data Scientist
+data_scientist,postgresql,PostgreSQL,2,False,5,0.060240963855421686,Data Scientist
+data_scientist,rag,RAG,5,True,5,0.060240963855421686,Data Scientist
+data_scientist,airflow,Airflow,2,False,4,0.04819277108433735,Data Scientist
+data_scientist,spark,Apache Spark,2,False,4,0.04819277108433735,Data Scientist
+data_scientist,dashboard,Dashboarding,8,False,4,0.04819277108433735,Data Scientist
+data_scientist,tableau,Tableau,8,False,4,0.04819277108433735,Data Scientist
+data_scientist,data_warehouse,Data Warehouse,2,False,3,0.03614457831325301,Data Scientist
+data_scientist,excel,Excel,8,False,3,0.03614457831325301,Data Scientist
+data_scientist,fine_tuning,Fine-tuning,5,True,3,0.03614457831325301,Data Scientist
+data_scientist,hadoop,Hadoop,2,False,3,0.03614457831325301,Data Scientist
+data_scientist,power_bi,Power BI,8,False,3,0.03614457831325301,Data Scientist
+data_scientist,time_series,Time Series,3,False,3,0.03614457831325301,Data Scientist
+data_scientist,xgboost,XGBoost,3,False,3,0.03614457831325301,Data Scientist
+data_scientist,hive,Hive,2,False,2,0.024096385542168676,Data Scientist
+data_scientist,keras,Keras,4,False,2,0.024096385542168676,Data Scientist
+data_scientist,langchain,LangChain,5,True,2,0.024096385542168676,Data Scientist
+data_scientist,lightgbm,LightGBM,3,False,2,0.024096385542168676,Data Scientist
+data_scientist,vector_db,Vector Database,5,True,2,0.024096385542168676,Data Scientist
+data_scientist,vertex_ai,Vertex AI,7,False,2,0.024096385542168676,Data Scientist
+data_scientist,dotnet,.NET,9,False,1,0.012048192771084338,Data Scientist
+data_scientist,ab_testing,A/B Testing,3,False,1,0.012048192771084338,Data Scientist
+data_scientist,azure_ml,Azure ML,7,False,1,0.012048192771084338,Data Scientist
+data_scientist,bash,Bash/Shell,1,False,1,0.012048192771084338,Data Scientist
+data_scientist,django,Django,9,False,1,0.012048192771084338,Data Scientist
+data_scientist,elasticsearch,Elasticsearch,2,False,1,0.012048192771084338,Data Scientist
+data_scientist,huggingface,Hugging Face,5,True,1,0.012048192771084338,Data Scientist
+data_scientist,kubernetes,Kubernetes,6,False,1,0.012048192771084338,Data Scientist
+data_scientist,looker,Looker,8,False,1,0.012048192771084338,Data Scientist
+data_scientist,mongodb,MongoDB,2,False,1,0.012048192771084338,Data Scientist
+data_scientist,php,PHP,9,False,1,0.012048192771084338,Data Scientist
+data_scientist,prompt_engineering,Prompt Engineering,5,True,1,0.012048192771084338,Data Scientist
+data_scientist,rest_api,REST API,9,False,1,0.012048192771084338,Data Scientist
+data_scientist,redis,Redis,2,False,1,0.012048192771084338,Data Scientist
+data_scientist,sagemaker,SageMaker,7,False,1,0.012048192771084338,Data Scientist
+data_scientist,scala,Scala,1,False,1,0.012048192771084338,Data Scientist
+data_scientist,wandb,Weights & Biases,6,True,1,0.012048192771084338,Data Scientist
+ml_engineer,machine_learning,Machine Learning (general),3,False,79,0.8876404494382022,ML Engineer
+ml_engineer,python,Python,1,False,72,0.8089887640449438,ML Engineer
+ml_engineer,deep_learning,Deep Learning (general),4,False,67,0.7528089887640449,ML Engineer
+ml_engineer,pytorch,PyTorch,4,False,59,0.6629213483146067,ML Engineer
+ml_engineer,tensorflow,TensorFlow,4,False,57,0.6404494382022472,ML Engineer
+ml_engineer,llm,Large Language Models,5,True,44,0.4943820224719101,ML Engineer
+ml_engineer,computer_vision,Computer Vision,4,False,33,0.3707865168539326,ML Engineer
+ml_engineer,nlp,NLP,4,False,25,0.2808988764044944,ML Engineer
+ml_engineer,docker,Docker,6,False,21,0.23595505617977527,ML Engineer
+ml_engineer,statistics,Statistics,3,False,19,0.21348314606741572,ML Engineer
+ml_engineer,fine_tuning,Fine-tuning,5,True,17,0.19101123595505617,ML Engineer
+ml_engineer,aws,AWS,7,False,15,0.16853932584269662,ML Engineer
+ml_engineer,model_serving,Model Serving,6,True,15,0.16853932584269662,ML Engineer
+ml_engineer,gcp,GCP,7,False,14,0.15730337078651685,ML Engineer
+ml_engineer,rag,RAG,5,True,14,0.15730337078651685,ML Engineer
+ml_engineer,r_lang,R,1,False,13,0.14606741573033707,ML Engineer
+ml_engineer,ci_cd,CI/CD,6,False,11,0.12359550561797752,ML Engineer
+ml_engineer,java,Java,1,False,11,0.12359550561797752,ML Engineer
+ml_engineer,transformer,Transformer,4,False,10,0.11235955056179775,ML Engineer
+ml_engineer,ai_agents,AI Agents,5,True,9,0.10112359550561797,ML Engineer
+ml_engineer,data_viz,Data Visualization,8,False,9,0.10112359550561797,ML Engineer
+ml_engineer,feature_engineering,Feature Engineering,3,False,9,0.10112359550561797,ML Engineer
+ml_engineer,keras,Keras,4,False,9,0.10112359550561797,ML Engineer
+ml_engineer,sql,SQL,1,False,9,0.10112359550561797,ML Engineer
+ml_engineer,kubernetes,Kubernetes,6,False,8,0.0898876404494382,ML Engineer
+ml_engineer,scikit_learn,scikit-learn,3,False,8,0.0898876404494382,ML Engineer
+ml_engineer,cnn,CNN,4,False,7,0.07865168539325842,ML Engineer
+ml_engineer,etl,ETL/ELT,2,False,7,0.07865168539325842,ML Engineer
+ml_engineer,lora,LoRA / PEFT,5,True,7,0.07865168539325842,ML Engineer
+ml_engineer,nosql,NoSQL,2,False,7,0.07865168539325842,ML Engineer
+ml_engineer,rnn,RNN/LSTM,4,False,7,0.07865168539325842,ML Engineer
+ml_engineer,langchain,LangChain,5,True,6,0.06741573033707865,ML Engineer
+ml_engineer,numpy,NumPy,2,False,6,0.06741573033707865,ML Engineer
+ml_engineer,rest_api,REST API,9,False,6,0.06741573033707865,ML Engineer
+ml_engineer,time_series,Time Series,3,False,6,0.06741573033707865,ML Engineer
+ml_engineer,spark,Apache Spark,2,False,5,0.056179775280898875,ML Engineer
+ml_engineer,azure,Azure,7,False,5,0.056179775280898875,ML Engineer
+ml_engineer,huggingface,Hugging Face,5,True,5,0.056179775280898875,ML Engineer
+ml_engineer,mlflow,MLflow,6,True,5,0.056179775280898875,ML Engineer
+ml_engineer,pandas,pandas,2,False,5,0.056179775280898875,ML Engineer
+ml_engineer,diffusion,Diffusion Models,5,True,4,0.0449438202247191,ML Engineer
+ml_engineer,bash,Bash/Shell,1,False,3,0.033707865168539325,ML Engineer
+ml_engineer,fastapi,FastAPI,6,False,3,0.033707865168539325,ML Engineer
+ml_engineer,airflow,Airflow,2,False,2,0.02247191011235955,ML Engineer
+ml_engineer,bigquery,BigQuery,2,False,2,0.02247191011235955,ML Engineer
+ml_engineer,dashboard,Dashboarding,8,False,2,0.02247191011235955,ML Engineer
+ml_engineer,flask,Flask,9,False,2,0.02247191011235955,ML Engineer
+ml_engineer,model_apis,Foundation Model APIs,5,True,2,0.02247191011235955,ML Engineer
+ml_engineer,golang,Go,1,False,2,0.02247191011235955,ML Engineer
+ml_engineer,hadoop,Hadoop,2,False,2,0.02247191011235955,ML Engineer
+ml_engineer,kubeflow,Kubeflow,6,True,2,0.02247191011235955,ML Engineer
+ml_engineer,mysql,MySQL,2,False,2,0.02247191011235955,ML Engineer
+ml_engineer,postgresql,PostgreSQL,2,False,2,0.02247191011235955,ML Engineer
+ml_engineer,prompt_engineering,Prompt Engineering,5,True,2,0.02247191011235955,ML Engineer
+ml_engineer,sagemaker,SageMaker,7,False,2,0.02247191011235955,ML Engineer
+ml_engineer,vector_db,Vector Database,5,True,2,0.02247191011235955,ML Engineer
+ml_engineer,vertex_ai,Vertex AI,7,False,2,0.02247191011235955,ML Engineer
+ml_engineer,ab_testing,A/B Testing,3,False,1,0.011235955056179775,ML Engineer
+ml_engineer,kafka,Apache Kafka,2,False,1,0.011235955056179775,ML Engineer
+ml_engineer,azure_ml,Azure ML,7,False,1,0.011235955056179775,ML Engineer
+ml_engineer,databricks,Databricks,7,False,1,0.011235955056179775,ML Engineer
+ml_engineer,django,Django,9,False,1,0.011235955056179775,ML Engineer
+ml_engineer,embeddings,Embeddings,5,True,1,0.011235955056179775,ML Engineer
+ml_engineer,excel,Excel,8,False,1,0.011235955056179775,ML Engineer
+ml_engineer,nodejs,Node.js,9,False,1,0.011235955056179775,ML Engineer
+ml_engineer,power_bi,Power BI,8,False,1,0.011235955056179775,ML Engineer
+ml_engineer,redis,Redis,2,False,1,0.011235955056179775,ML Engineer
+ml_engineer,tableau,Tableau,8,False,1,0.011235955056179775,ML Engineer
+ml_engineer,xgboost,XGBoost,3,False,1,0.011235955056179775,ML Engineer
+algorithm_engineer,machine_learning,Machine Learning (general),3,False,17,0.8095238095238095,Algorithm Engineer
+algorithm_engineer,python,Python,1,False,16,0.7619047619047619,Algorithm Engineer
+algorithm_engineer,deep_learning,Deep Learning (general),4,False,13,0.6190476190476191,Algorithm Engineer
+algorithm_engineer,computer_vision,Computer Vision,4,False,11,0.5238095238095238,Algorithm Engineer
+algorithm_engineer,statistics,Statistics,3,False,11,0.5238095238095238,Algorithm Engineer
+algorithm_engineer,nlp,NLP,4,False,6,0.2857142857142857,Algorithm Engineer
+algorithm_engineer,pytorch,PyTorch,4,False,5,0.23809523809523808,Algorithm Engineer
+algorithm_engineer,java,Java,1,False,4,0.19047619047619047,Algorithm Engineer
+algorithm_engineer,transformer,Transformer,4,False,4,0.19047619047619047,Algorithm Engineer
+algorithm_engineer,tensorflow,TensorFlow,4,False,3,0.14285714285714285,Algorithm Engineer
+algorithm_engineer,dotnet,.NET,9,False,2,0.09523809523809523,Algorithm Engineer
+algorithm_engineer,fine_tuning,Fine-tuning,5,True,2,0.09523809523809523,Algorithm Engineer
+algorithm_engineer,gcp,GCP,7,False,2,0.09523809523809523,Algorithm Engineer
+algorithm_engineer,llm,Large Language Models,5,True,2,0.09523809523809523,Algorithm Engineer
+algorithm_engineer,r_lang,R,1,False,2,0.09523809523809523,Algorithm Engineer
+algorithm_engineer,ai_agents,AI Agents,5,True,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,aws,AWS,7,False,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,azure,Azure,7,False,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,excel,Excel,8,False,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,huggingface,Hugging Face,5,True,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,lora,LoRA / PEFT,5,True,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,power_bi,Power BI,8,False,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,prompt_engineering,Prompt Engineering,5,True,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,rnn,RNN/LSTM,4,False,1,0.047619047619047616,Algorithm Engineer
+algorithm_engineer,time_series,Time Series,3,False,1,0.047619047619047616,Algorithm Engineer
+ai_engineer,llm,Large Language Models,5,True,56,0.8115942028985508,AI Engineer
+ai_engineer,python,Python,1,False,55,0.7971014492753623,AI Engineer
+ai_engineer,rag,RAG,5,True,55,0.7971014492753623,AI Engineer
+ai_engineer,machine_learning,Machine Learning (general),3,False,35,0.5072463768115942,AI Engineer
+ai_engineer,ai_agents,AI Agents,5,True,34,0.4927536231884058,AI Engineer
+ai_engineer,model_apis,Foundation Model APIs,5,True,28,0.4057971014492754,AI Engineer
+ai_engineer,prompt_engineering,Prompt Engineering,5,True,28,0.4057971014492754,AI Engineer
+ai_engineer,fine_tuning,Fine-tuning,5,True,26,0.37681159420289856,AI Engineer
+ai_engineer,gcp,GCP,7,False,22,0.3188405797101449,AI Engineer
+ai_engineer,langchain,LangChain,5,True,18,0.2608695652173913,AI Engineer
+ai_engineer,pytorch,PyTorch,4,False,17,0.2463768115942029,AI Engineer
+ai_engineer,docker,Docker,6,False,16,0.2318840579710145,AI Engineer
+ai_engineer,embeddings,Embeddings,5,True,15,0.21739130434782608,AI Engineer
+ai_engineer,nlp,NLP,4,False,14,0.2028985507246377,AI Engineer
+ai_engineer,vertex_ai,Vertex AI,7,False,14,0.2028985507246377,AI Engineer
+ai_engineer,ci_cd,CI/CD,6,False,13,0.18840579710144928,AI Engineer
+ai_engineer,vector_db,Vector Database,5,True,12,0.17391304347826086,AI Engineer
+ai_engineer,aws,AWS,7,False,11,0.15942028985507245,AI Engineer
+ai_engineer,excel,Excel,8,False,11,0.15942028985507245,AI Engineer
+ai_engineer,java,Java,1,False,10,0.14492753623188406,AI Engineer
+ai_engineer,kubernetes,Kubernetes,6,False,10,0.14492753623188406,AI Engineer
+ai_engineer,model_serving,Model Serving,6,True,10,0.14492753623188406,AI Engineer
+ai_engineer,deep_learning,Deep Learning (general),4,False,9,0.13043478260869565,AI Engineer
+ai_engineer,fastapi,FastAPI,6,False,8,0.11594202898550725,AI Engineer
+ai_engineer,computer_vision,Computer Vision,4,False,7,0.10144927536231885,AI Engineer
+ai_engineer,huggingface,Hugging Face,5,True,7,0.10144927536231885,AI Engineer
+ai_engineer,llamaindex,LlamaIndex,5,True,7,0.10144927536231885,AI Engineer
+ai_engineer,lora,LoRA / PEFT,5,True,7,0.10144927536231885,AI Engineer
+ai_engineer,sql,SQL,1,False,7,0.10144927536231885,AI Engineer
+ai_engineer,statistics,Statistics,3,False,7,0.10144927536231885,AI Engineer
+ai_engineer,azure,Azure,7,False,6,0.08695652173913043,AI Engineer
+ai_engineer,r_lang,R,1,False,6,0.08695652173913043,AI Engineer
+ai_engineer,tensorflow,TensorFlow,4,False,6,0.08695652173913043,AI Engineer
+ai_engineer,flask,Flask,9,False,5,0.07246376811594203,AI Engineer
+ai_engineer,spark,Apache Spark,2,False,4,0.057971014492753624,AI Engineer
+ai_engineer,django,Django,9,False,4,0.057971014492753624,AI Engineer
+ai_engineer,nodejs,Node.js,9,False,4,0.057971014492753624,AI Engineer
+ai_engineer,rest_api,REST API,9,False,4,0.057971014492753624,AI Engineer
+ai_engineer,dotnet,.NET,9,False,3,0.043478260869565216,AI Engineer
+ai_engineer,ab_testing,A/B Testing,3,False,3,0.043478260869565216,AI Engineer
+ai_engineer,dashboard,Dashboarding,8,False,3,0.043478260869565216,AI Engineer
+ai_engineer,etl,ETL/ELT,2,False,3,0.043478260869565216,AI Engineer
+ai_engineer,feature_engineering,Feature Engineering,3,False,3,0.043478260869565216,AI Engineer
+ai_engineer,mlflow,MLflow,6,True,3,0.043478260869565216,AI Engineer
+ai_engineer,microservices,Microservices,9,False,3,0.043478260869565216,AI Engineer
+ai_engineer,postgresql,PostgreSQL,2,False,3,0.043478260869565216,AI Engineer
+ai_engineer,data_viz,Data Visualization,8,False,2,0.028985507246376812,AI Engineer
+ai_engineer,diffusion,Diffusion Models,5,True,2,0.028985507246376812,AI Engineer
+ai_engineer,hadoop,Hadoop,2,False,2,0.028985507246376812,AI Engineer
+ai_engineer,keras,Keras,4,False,2,0.028985507246376812,AI Engineer
+ai_engineer,kubeflow,Kubeflow,6,True,2,0.028985507246376812,AI Engineer
+ai_engineer,mysql,MySQL,2,False,2,0.028985507246376812,AI Engineer
+ai_engineer,numpy,NumPy,2,False,2,0.028985507246376812,AI Engineer
+ai_engineer,power_bi,Power BI,8,False,2,0.028985507246376812,AI Engineer
+ai_engineer,tableau,Tableau,8,False,2,0.028985507246376812,AI Engineer
+ai_engineer,transformer,Transformer,4,False,2,0.028985507246376812,AI Engineer
+ai_engineer,pandas,pandas,2,False,2,0.028985507246376812,AI Engineer
+ai_engineer,airflow,Airflow,2,False,1,0.014492753623188406,AI Engineer
+ai_engineer,kafka,Apache Kafka,2,False,1,0.014492753623188406,AI Engineer
+ai_engineer,cnn,CNN,4,False,1,0.014492753623188406,AI Engineer
+ai_engineer,elasticsearch,Elasticsearch,2,False,1,0.014492753623188406,AI Engineer
+ai_engineer,golang,Go,1,False,1,0.014492753623188406,AI Engineer
+ai_engineer,redis,Redis,2,False,1,0.014492753623188406,AI Engineer
+ai_engineer,time_series,Time Series,3,False,1,0.014492753623188406,AI Engineer
+backend,python,Python,1,False,45,0.703125,Backend Control
+backend,docker,Docker,6,False,39,0.609375,Backend Control
+backend,rest_api,REST API,9,False,33,0.515625,Backend Control
+backend,java,Java,1,False,30,0.46875,Backend Control
+backend,mysql,MySQL,2,False,30,0.46875,Backend Control
+backend,redis,Redis,2,False,29,0.453125,Backend Control
+backend,php,PHP,9,False,27,0.421875,Backend Control
+backend,kubernetes,Kubernetes,6,False,26,0.40625,Backend Control
+backend,golang,Go,1,False,25,0.390625,Backend Control
+backend,aws,AWS,7,False,24,0.375,Backend Control
+backend,ci_cd,CI/CD,6,False,23,0.359375,Backend Control
+backend,postgresql,PostgreSQL,2,False,23,0.359375,Backend Control
+backend,nodejs,Node.js,9,False,21,0.328125,Backend Control
+backend,django,Django,9,False,20,0.3125,Backend Control
+backend,gcp,GCP,7,False,18,0.28125,Backend Control
+backend,sql,SQL,1,False,18,0.28125,Backend Control
+backend,dotnet,.NET,9,False,17,0.265625,Backend Control
+backend,mongodb,MongoDB,2,False,13,0.203125,Backend Control
+backend,microservices,Microservices,9,False,12,0.1875,Backend Control
+backend,azure,Azure,7,False,11,0.171875,Backend Control
+backend,nosql,NoSQL,2,False,11,0.171875,Backend Control
+backend,spring,Spring Boot,9,False,10,0.15625,Backend Control
+backend,llm,Large Language Models,5,True,9,0.140625,Backend Control
+backend,kafka,Apache Kafka,2,False,7,0.109375,Backend Control
+backend,machine_learning,Machine Learning (general),3,False,7,0.109375,Backend Control
+backend,dashboard,Dashboarding,8,False,6,0.09375,Backend Control
+backend,flask,Flask,9,False,6,0.09375,Backend Control
+backend,data_viz,Data Visualization,8,False,5,0.078125,Backend Control
+backend,fastapi,FastAPI,6,False,5,0.078125,Backend Control
+backend,rag,RAG,5,True,5,0.078125,Backend Control
+backend,etl,ETL/ELT,2,False,4,0.0625,Backend Control
+backend,nlp,NLP,4,False,4,0.0625,Backend Control
+backend,ai_agents,AI Agents,5,True,3,0.046875,Backend Control
+backend,elasticsearch,Elasticsearch,2,False,3,0.046875,Backend Control
+backend,r_lang,R,1,False,3,0.046875,Backend Control
+backend,statistics,Statistics,3,False,3,0.046875,Backend Control
+backend,model_apis,Foundation Model APIs,5,True,2,0.03125,Backend Control
+backend,bash,Bash/Shell,1,False,1,0.015625,Backend Control
+backend,bigquery,BigQuery,2,False,1,0.015625,Backend Control
+backend,computer_vision,Computer Vision,4,False,1,0.015625,Backend Control
+backend,data_warehouse,Data Warehouse,2,False,1,0.015625,Backend Control
+backend,databricks,Databricks,7,False,1,0.015625,Backend Control
+backend,fine_tuning,Fine-tuning,5,True,1,0.015625,Backend Control
+backend,vector_db,Vector Database,5,True,1,0.015625,Backend Control
+backend,pandas,pandas,2,False,1,0.015625,Backend Control
+other,computer_vision,Computer Vision,4,False,4,0.08,Other
+other,r_lang,R,1,False,3,0.06,Other

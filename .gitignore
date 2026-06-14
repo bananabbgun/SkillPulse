@@ -4,7 +4,11 @@ __pycache__/
 .venv/
 venv/
 .streamlit/
-output/
+# Keep marts (CSV) + figures (PNG) under output/ so the Streamlit Cloud deploy
+# can render without re-running the pipeline server-side. Exclude heavier
+# binary intermediates (Parquet, DuckDB).
+output/marts/*.parquet
+output/marts/*.duckdb
 data/raw/events.jsonl
 data/raw/postings_collected.json
 data/raw/_*
