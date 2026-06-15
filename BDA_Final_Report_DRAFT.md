@@ -10,7 +10,7 @@
 | **Live demo (bonus)** | `https://skillpulse-gslw7hdztc85xs3qp3qihn.streamlit.app` |
 | **Date** | `2026-06-15` |
 
-> **Reading guide.** §1–§4 cover the product thesis, target customer, scope, and demand evidence (Required Components 1 and 2). §5–§6 cover the technical system, the four-stage refinement pipeline, and the analytical results (Figures 1–3 produced; Figure 4 specified as method only). §7 (GTM) and §8 (scalability + cost) address the optional bonus components. §11 lists what this iteration ships vs what is deliberately deferred to a follow-up iteration.
+> **Reading guide.** §1–§4 cover the product thesis, target customer, scope, and demand evidence (Required Components 1 and 2). §5–§6 cover the technical system, the four-stage refinement pipeline, and the analytical results (Figures 3–5 produced from the live scrape; Figure 6 specified as method only). Figures 1 and 2 are the scope and architecture diagrams in §3 and §5. §7 (GTM) and §8 (scalability + cost) address the optional bonus components. §11 lists what this iteration ships vs what is deliberately deferred to a follow-up iteration.
 
 ---
 
@@ -119,7 +119,7 @@ Independent, citable signals that the underlying demand exists and is shifting:
 | Other (off-cluster) | 50 | 0 | 0 % |
 | **Total cluster (six roles)** | **448** | **182** | **41 %** |
 
-**Our role-resolved equivalent of the "33 %" headline is 41 % AI-inflection across the six-role data/AI cluster** (vs 19 % in the backend control), and the rate is monotonically higher the closer a role sits to model production — exactly the gradient a curriculum planner needs to know. This is the cross-sectional demand shift, measured directly off live JD text rather than inferred from a quarterly survey.
+**Across the six-role data/AI cluster (n = 448 postings), 41 % are AI-inflected, compared with 19 % in the backend control (n = 64).** A direct headline-vs-headline comparison with Business Next's "~33 %" is not quite an apples-to-apples — their 33 % is over *all software-engineering postings*, a much broader denominator, whereas our 41 % is computed over the deliberately narrowed data/AI cluster (one would *expect* a more AI-skewed denominator to read higher than a general-software one). What our number adds, beyond confirming that AI is now a baseline expectation rather than a niche, is the **role-by-role gradient: penetration scales monotonically with proximity to model production**, exactly the structure a curriculum planner needs to act on. The full per-role breakdown sits inside the cluster, and is what §6 (Figure 3) plots in detail.
 
 ### 4.3 Willingness-to-pay anchors
 
@@ -142,7 +142,7 @@ Reproducible steps (scripts in `repo/ingestion/`, see Section 9):
 1. Enumerate cluster + control job categories on 104 / Cake.
 2. Pull postings via the boards' JSON list endpoints (104 exposes an XHR `list` endpoint requiring a `Referer` header); Playwright fallback for JS-heavy pages.
 3. Persist raw JSON to the document store; land normalized Parquet to the lake.
-4. Re-run nightly to accumulate a longitudinal record. (Reproduction script: `repo/ingestion/collect.py`.)
+4. **This iteration produces a single cross-sectional snapshot** (562 unique postings collected during the project window). The collector is designed to be re-run on a cadence — every run appends to the JSONL event log, so accumulating a longitudinal record over multiple runs is a matter of scheduling, not architecture; we discuss the longitudinal value in §8 and do not claim it as a property of this iteration. (Reproduction script: `repo/ingestion/collect.py`.)
 
 ---
 
@@ -150,14 +150,14 @@ Reproducible steps (scripts in `repo/ingestion/`, see Section 9):
 
 ### 5.1 Data sources
 
-Two job boards were used in this iteration. The "additional sources" row records boards that the architecture is ready for but that we did not crawl in this iteration; the syllabus source is the one Figure 4 (deferred bonus) would consume.
+Two job boards were used in this iteration. The "additional sources" row records boards that the architecture is ready for but that we did not crawl in this iteration; the syllabus source is the one Figure 6 (deferred bonus) would consume.
 
 | Source | What we ingest | How | Used this iteration |
 |---|---|---|---|
 | 104 人力銀行 | Postings for cluster + control roles: title, company, JD text, required skills, salary (when numeric), location, posted date | XHR `list` endpoint with `Referer` warming; CDP attach to a user-launched Chrome when Cloudflare blocks the raw HTTP path | ✓ 382 postings |
 | Cake (cake.me) | Same fields, especially AI-titled and startup roles | Playwright headless; lazy-scroll on the search page to expand the result set | ✓ 180 postings |
 | 1111 / Yourator (additional Taiwan boards) | Same posting fields | Same Playwright pattern as Cake | Deferred — architecture-ready |
-| Training-provider syllabi (public) | Course skill lists for gap analysis | Manual collection + skill-id mapping YAML | Deferred — feeds Figure 4 |
+| Training-provider syllabi (public) | Course skill lists for gap analysis | Manual collection + skill-id mapping YAML | Deferred — feeds Figure 6 |
 
 ### 5.2 Technology stack and why (mapped to course paradigms)
 
@@ -178,9 +178,9 @@ The honest fact first: this corpus is **hundreds of thousands of postings, not p
 
 ### 5.3 Processing pipeline (the refinement logic)
 
-1. **Skill extraction + normalization.** For each JD, match against the taxonomy dictionary (Appendix A; bilingual synonyms), normalize to canonical skills tagged by facet (1–8). **Buzzword filter:** a facet-5 (GenAI) term counts only if it appears in a requirement/skill context, not merely in company boilerplate. Output: a skill vector + facet flags per posting. *(This step is the project's central "raw → refined" value.)*
+1. **Skill extraction + normalization.** For each JD, match against the taxonomy dictionary (Appendix A; bilingual synonyms), normalize to canonical skills tagged by facet (1–9). **Buzzword filter:** a facet-5 (GenAI) term counts only if it appears in a requirement/skill context, not merely in company boilerplate. Output: a skill vector + facet flags per posting. *(This step is the project's central "raw → refined" value.)*
 2. **Role classification by skill fingerprint.** Assign each posting to one of the six cluster sub-roles using its skill vector (nearest-prototype / lightweight classifier). **Job titles are a weak prior only** — Taiwan titles are inconsistent (a posting titled "AI Engineer" may functionally be a data engineer).
-3. **AI penetration.** Define a posting as *AI-inflected* if it contains ≥1 facet-5 or facet-6 skill. Compute the AI-inflected share per role and for the whole cluster.
+3. **AI penetration.** Define a posting as *AI-inflected* if its skill vector contains at least one canonical skill whose `ai_era` flag is true. The `ai_era` set is **all Facet 5 skills (Generative AI / LLM: LLM, RAG, prompt engineering, vector DB, embeddings, fine-tuning, …)** plus a **deliberately restricted subset of Facet 6 (MLOps): MLflow, W&B, model serving, model monitoring, feature store, Kubeflow.** Generic infrastructure used by backend roles too — Docker, Kubernetes, FastAPI, CI/CD — sits under Facet 6 but has `ai_era: false`, so a posting that mentions only those is **not** AI-inflected. This is the design choice that keeps the Backend control group from being falsely tagged (and is also what makes the Backend 19 % floor in Figure 3 a real signal rather than an artefact). Compute the AI-inflected share per role and for the whole cluster.
 4. **Cross-sectional AI premium.** Within each role, compare AI-inflected vs non-AI postings on salary and skill count. Use numeric salaries only (drop "面議"/negotiable). The **Backend control group** is the non-AI baseline against which the cluster premium is interpreted.
 5. **Skill co-occurrence / bundles.** Compute co-occurrence of AI-era skills with foundational skills (e.g., LLM×SQL, RAG×Python) to show AI skills are *bundled into* roles, not optional add-ons. Single-snapshot; no time series needed.
 6. **Curriculum-gap analysis.** Map a real public syllabus onto the taxonomy, overlay on market demand frequency, and surface "high-demand-but-not-taught" skills (especially AI-era).
@@ -199,13 +199,13 @@ A read-only **FastAPI** query API (e.g., `GET /skills?role=data_engineer` return
 
 ## 6. Analysis Method and Results
 
-Each figure doubles as a product output and as part of the demand evidence in §4. The full set is generated by `python -m skillpulse.run_all`; Figures 1 and 2 are PNGs in `output/figures/`, Figure 3 is rendered interactively by the dashboard from `output/marts/role_skill_demand.csv`, and Figure 4 is method-only in this iteration.
+Figures 3, 4, and 5 are pipeline outputs (Figures 1 and 2 in §3 and §5 are the scope and architecture diagrams). Figure 6 is the curriculum-gap overlay and is specified as method-only in this iteration. All three result figures are produced by `python -m skillpulse.run_all` as PNGs in `output/figures/`; Figure 5 is also rendered interactively by the dashboard from `output/marts/role_skill_demand.csv`.
 
-### Figure 1 — AI Penetration by Role
+### Figure 3 — AI Penetration by Role
 
-![Figure 1 — AI-inflected share of postings per role, ranked. AI Engineer is 100% by construction; ML Engineer 58%; Data Scientist 36%; the MVP focus role Data Engineer 29% (teal-highlighted); Backend control 19%; Algorithm Engineer 14%; Data Analyst 7%. n shown above each bar.](output/figures/figure1_ai_penetration.png)
+![Figure 3 — AI-inflected share of postings per role, ranked. AI Engineer is 100% (partly definitional — see interpretation); ML Engineer 58%; Data Scientist 36%; the MVP focus role Data Engineer 29% (teal-highlighted); Backend control 19%; Algorithm Engineer 14%; Data Analyst 7%. n shown above each bar.](output/figures/figure1_ai_penetration.png)
 
-**Figure 1.** AI-inflected share by role across 562 postings (output of `python -m skillpulse.run_all`). The teal bar marks the MVP focus role (Data Engineer); all others are grey.
+**Figure 3.** AI-inflected share by role across 562 postings. The teal bar marks the MVP focus role (Data Engineer); all others are grey.
 
 | Role | n | AI-inflected share |
 |---|---:|---:|
@@ -217,13 +217,13 @@ Each figure doubles as a product output and as part of the demand evidence in §
 | Algorithm Engineer | 21 | 14 % |
 | Data Analyst | 118 | 7 % |
 
-**Interpretation.** AI penetration tracks the value-chain position of the role: every AI Engineer posting requires at least one Facet 5 / 6 skill, and the rate decays as the role moves upstream toward data engineering and analysis. Backend Control sits at 19 % — a non-trivial floor that says *AI skills also leak into roles outside the data/AI cluster* (most often as RAG/embedding services in product backends), and confirms that our taxonomy is not labelling every posting with Docker / FastAPI as "AI-inflected." For our MVP focus role, **Data Engineer at 29 %**, AI is no longer a niche specialisation — roughly one in three openings already expects an LLM / vector-DB / MLOps competence.
+**Interpretation.** AI penetration tracks the value-chain position of the role: penetration decays as the role moves upstream toward data engineering and analysis. **One caveat on the AI Engineer 100 % cell:** that row is partly definitional rather than discovered, because the AI Engineer role prototype in `roles_v1.yaml` is itself defined by AI-era skills (LLM, RAG, prompt engineering, vector DB), so a posting cannot be classified as AI Engineer without already containing at least one ai_era skill. The numbers worth reading are the roles whose prototypes are **not** defined by ai_era skills — ML Engineer (58 %), Data Scientist (36 %), Data Engineer (29 %), Algorithm Engineer (14 %), Data Analyst (7 %) — and the **Backend control at 19 %**. The Backend floor is a non-trivial signal that AI skills also leak into roles outside the data/AI cluster (most often as RAG / embedding services in product backends), and it confirms that our taxonomy is not labelling every posting with Docker / FastAPI as AI-inflected — those skills are explicitly excluded from the ai_era set (see §5.3). For our MVP focus role, **Data Engineer at 29 %**, AI is no longer a niche specialisation — roughly one in three openings already expects an LLM / vector-DB / MLOps competence.
 
-### Figure 2 — AI Salary Premium vs Backend Control
+### Figure 4 — AI Salary Premium vs Backend Control
 
-![Figure 2 — Median monthly salary in NTD, paired non-AI vs AI-inflected per role. ML Engineer shows the clearest within-role premium (NT$52k vs NT$78k, +50%); Data Engineer +22%; Data Scientist −6% (inside noise). Backend control inverts to −27% (NT$86k vs NT$63k). n above each bar; cells with no opposite-side n leave that bar blank.](output/figures/figure2_ai_premium_vs_backend.png)
+![Figure 4 — Median monthly salary in NTD, paired non-AI vs AI-inflected per role. ML Engineer shows the clearest within-role premium (NT$52k vs NT$78k, +50%); Data Engineer +22%; Data Scientist −6% (inside noise). Backend control inverts to −27% (NT$86k vs NT$63k). n above each bar; cells with no opposite-side n leave that bar blank.](output/figures/figure2_ai_premium_vs_backend.png)
 
-**Figure 2.** AI salary premium within each role. Medians use only salary-known postings ("面議" / negotiable dropped). n is shown for each cell. Sub-groups with n < 8 are not interpretable on their own and are called out individually in the text below.
+**Figure 4.** AI salary premium within each role. Medians use only salary-known postings ("面議" / negotiable dropped). n is shown for each cell. Sub-groups with n < 8 are not interpretable on their own and are called out individually in the text below.
 
 | Role | non-AI median (n) | AI-inflected median (n) | Premium |
 |---|---|---|---:|
@@ -237,11 +237,11 @@ Each figure doubles as a product output and as part of the demand evidence in §
 
 **Interpretation.** Within the two cluster roles where both sides have n ≥ 8 — **Data Engineer (+22 %) and ML Engineer (+50 %)** — AI-inflected postings carry a clear, measurable monthly premium of NT$15k–25k. ML Engineer is the strongest signal in the dataset: 18 AI-inflected vs 10 non-AI salary-known rows, and a +50 % gap that is robust to either tail being trimmed. Data Scientist comes out slightly negative (−6 %, n = 7 vs 14) but the gap is inside noise. The most diagnostic row is the **Backend control: non-AI postings actually pay 27 % more than AI-inflected ones (NT$86k vs NT$63k)** — a reminder that within a *non-AI* role, "doing some LLM glue work" is currently a junior-skewed feature, not a premium one. The contrast between Backend (negative within-role) and ML Engineer (large positive within-role) is what makes the premium claim defensible: AI skills pay *inside the cluster*, not as a universal Pareto improvement.
 
-### Figure 3 — Skill Demand for the Focus Role (Data Engineer)
+### Figure 5 — Skill Demand for the Focus Role (Data Engineer)
 
-![Figure 3 — Horizontal bar chart of skill demand for Data Engineer (n=68 postings). Top 10 foundational skills shown in teal: Python 81%, SQL 75%, ETL/ELT 72%, GCP 53%, AWS 41%, Spark 41%, ML general 34%, Azure 32%, Kubernetes 26%, Airflow 26%. Top 5 AI-era skills shown in red below: LLM 16%, RAG 9%, AI Agents 9%, Vector Database 6%, Model Serving 4%.](output/figures/figure3_skill_demand_data_engineer.png)
+![Figure 5 — Horizontal bar chart of skill demand for Data Engineer (n=68 postings). Top 10 foundational skills shown in teal: Python 81%, SQL 75%, ETL/ELT 72%, GCP 53%, AWS 41%, Spark 41%, ML general 34%, Azure 32%, Kubernetes 26%, Airflow 26%. Top 5 AI-era skills shown in red below: LLM 16%, RAG 9%, AI Agents 9%, Vector Database 6%, Model Serving 4%.](output/figures/figure3_skill_demand_data_engineer.png)
 
-**Figure 3.** Skill demand for Data Engineer, split into the top 10 foundational skills (teal) and the top 5 AI-era skills (red). A pure top-15 ranking would not surface any red bar because foundational skills dominate the head of the distribution — splitting the legend this way exposes the AI signal that the curriculum-design argument depends on. Tables of the same numbers follow.
+**Figure 5.** Skill demand for Data Engineer, split into the top 10 foundational skills (teal) and the top 5 AI-era skills (red). A pure top-15 ranking would not surface any red bar because foundational skills dominate the head of the distribution — splitting the legend this way exposes the AI signal that the curriculum-design argument depends on. Tables of the same numbers follow.
 
 Top 10 foundational skills demanded across the 68 Data Engineer postings (% = share of postings mentioning each):
 
@@ -269,17 +269,17 @@ The leading AI-era skills inside the same role (Facet 5/6) are:
 
 **Interpretation.** The Data Engineer skill bundle is still anchored to the classic spine — Python · SQL · ETL · multi-cloud (GCP > AWS > Azure) · Spark / Airflow — and that core dominates the top of the chart. The AI layer has not yet displaced the spine, but it has clearly arrived: **roughly 1 in 6 Data Engineer JDs (16 %) explicitly require Large Language Models**, with RAG and AI Agents trailing in the high single digits. This is the curriculum signal a bootcamp can act on directly: keep the SQL/ETL/cloud backbone, and start adding an LLM / RAG / vector-store module before that 16 % grows into the 30–40 % band where ML Engineer already sits.
 
-### Figure 4 — Curriculum-gap analysis (deferred)
+### Figure 6 — Curriculum-gap analysis (deferred)
 
-**Method (specified, not executed in this iteration).** Take a public syllabus from a Taiwanese training provider (e.g. an Elite Pioneer programme or a private bootcamp), map each taught topic to a canonical skill_id in our taxonomy, then overlay the resulting "taught / not taught" flag onto Figure 3's role-skill demand bar. The "high-demand-but-not-taught" skills — especially AI-era ones — are the actionable gap the customer pays for. Implementation sketch: a YAML of taught skill_ids per syllabus, joined against `role_skill_demand.csv`, coloured by `taught ∈ {yes, no}`. This bonus is recorded in §11 as deferred.
+**Method (specified, not executed in this iteration).** Take a public syllabus from a Taiwanese training provider (e.g. an Elite Pioneer programme or a private bootcamp), map each taught topic to a canonical skill_id in our taxonomy, then overlay the resulting "taught / not taught" flag onto Figure 5's role-skill demand bar. The "high-demand-but-not-taught" skills — especially AI-era ones — are the actionable gap the customer pays for. Implementation sketch: a YAML of taught skill_ids per syllabus, joined against `role_skill_demand.csv`, coloured by `taught ∈ {yes, no}`. This bonus is recorded in §11 as deferred.
 
 ---
 
-**Sample-size and salary-sparsity reality check.** Of the 562 postings, **186 (33 %) parsed to a numeric monthly salary** — the remainder list "面議" / "待遇面議" / "negotiable." This is the dominant constraint on Figure 2: the cells that survive are only those where each (role, AI-flag) sub-group has enough numeric rows. Cake is the better salary signal (**38 % of Cake postings are numeric, vs 31 % of 104**), which is why expanding the Cake share from 21 % to 32 % of the corpus shifted Figure 2's Data Engineer cell from −25 % (n = 3 vs 5) to +22 % (n = 8 vs 17) — i.e. the headline number tracks sample maturity, and a longitudinal scrape (Section 8) is what stabilises it.
+**Sample-size and salary-sparsity reality check.** Of the 562 postings, **186 (33 %) parsed to a numeric monthly salary** — the remainder list "面議" / "待遇面議" / "negotiable." This is the dominant constraint on Figure 4: the cells that survive are only those where each (role, AI-flag) sub-group has enough numeric rows. Cake is the better salary signal (**38 % of Cake postings are numeric, vs 31 % of 104**), which is why expanding the Cake share from 21 % to 32 % of the corpus shifted Figure 4's Data Engineer cell from −25 % (n = 3 vs 5) to +22 % (n = 8 vs 17) — i.e. the headline number tracks sample maturity, and a longitudinal scrape (Section 8) is what stabilises it.
 
 **Stated limitations.** Three limitations are kept explicit and report-level, not hidden:
-- *Salary sparsity.* Many postings list salary as "negotiable," so Figure 2's medians are computed off the salary-known subset only; we report n alongside every cell, and treat sub-groups with n < 8 as not interpretable.
-- *Seniority confound.* Senior roles tend to be both more AI-heavy and higher-paid; the report does not currently stratify by seniority, so a portion of the AI premium in Figure 2 is co-mingled with seniority effects.
+- *Salary sparsity.* Many postings list salary as "negotiable," so Figure 4's medians are computed off the salary-known subset only; we report n alongside every cell, and treat sub-groups with n < 8 as not interpretable.
+- *Seniority confound.* Senior roles tend to be both more AI-heavy and higher-paid; the report does not currently stratify by seniority, so a portion of the AI premium in Figure 4 is co-mingled with seniority effects.
 - *Snapshot aging.* A single cross-sectional scrape dates quickly; longitudinal value is argued under scalability (§8) and is not claimed for this snapshot.
 
 ---
@@ -341,7 +341,7 @@ SkillPulse/
 │   │   ├── events.py                    # append-only JSONL event log (Kafka stand-in)
 │   │   └── sources/{job104.py, cake.py} # the two scrapers
 │   ├── processing/pipeline.py           # raw → normalized (Spark local / pandas fallback)
-│   ├── analysis/figures.py              # matplotlib Figures 1 + 2
+│   ├── analysis/figures.py              # matplotlib Figures 3, 4, 5
 │   └── dashboard/app.py                 # Streamlit one-page brief
 ├── taxonomy/
 │   ├── skills_v1.yaml                   # canonical skill dictionary (Appendix A)
@@ -352,7 +352,7 @@ SkillPulse/
 └── output/marts/, output/figures/       # snapshot of the published 562-posting run
 ```
 
-**Reproducibility.** The README documents (a) `--sample` for an offline, zero-credential demo run, (b) the live `collect.py` invocation per source (including the 104 manual-URL fallback when Cloudflare blocks the JSON path), and (c) the dashboard launch. Repro was verified end-to-end from a fresh `git clone` against an empty Python environment: `pip install -r requirements.txt` → `python -m skillpulse.run_all --sample` produces all marts and Figures 1 / 2 in pandas-fallback mode, and `python -m pytest tests` passes (7 tests).
+**Reproducibility.** The README documents (a) `--sample` for an offline, zero-credential demo run, (b) the live `collect.py` invocation per source (including the 104 manual-URL fallback when Cloudflare blocks the JSON path), and (c) the dashboard launch. Repro was verified end-to-end from a fresh `git clone` against an empty Python environment: `pip install -r requirements.txt` → `python -m skillpulse.run_all --sample` produces all marts and Figures 3, 4, 5 in pandas-fallback mode, and `python -m pytest tests` passes (7 tests).
 
 ---
 
@@ -369,13 +369,13 @@ Scraped data is used for academic analysis with rate-limiting and respect for ro
 - **Skill taxonomy v1.** 88 canonical skills across 9 facets, bilingual aliases, `ai_era` flag, `require_context` buzzword filter (Appendix A).
 - **Live scrape, two sources.** 104 (Cloudflare-bypassed via a CDP attach to a user-launched Chrome) and Cake (Playwright headless). Total **562 unique postings** (104: 382, Cake: 180), reproducible from a clean clone via `python -m skillpulse.ingestion.collect`.
 - **Processing pipeline.** Skill extraction → fingerprint role classification → AI-penetration + AI-premium aggregation, runnable via `python -m skillpulse.run_all` (PySpark local mode when installed, pandas fallback otherwise).
-- **Figures 1, 2, 3.** AI penetration by role, within-role AI salary premium vs Backend control, and Data-Engineer top-skill ranking with AI-era highlights (§6).
+- **Figures 3, 4, 5.** AI penetration by role, within-role AI salary premium vs Backend control, and Data Engineer top-skill ranking with AI-era highlights (§6). Figures 1 and 2 are the scope diagram (§3) and end-to-end architecture diagram (§5).
 - **Delivery.** Read-only Streamlit dashboard with role selector, AI-vs-non-AI premium callout, skill demand bar (AI-era highlighted), and cross-role context chart.
 - **Reproducibility.** README documents `--sample` (offline demo), live collection, and the 104 manual-URL fallback. Verified end-to-end from a fresh `git clone`; `pytest` passes (7 tests).
 - **Cost model.** Three-scale back-of-envelope (demo / MVP / 100×) tied to published AWS and Anthropic prices (§8).
 
 ### Deliberately deferred (acknowledged scope)
-- **Figure 4 (curriculum-gap overlay).** Method is specified in §6; implementation requires picking one or two public syllabi to map onto the taxonomy, which we leave as a follow-up.
+- **Figure 6 (curriculum-gap overlay).** Method is specified in §6; implementation requires picking one or two public syllabi to map onto the taxonomy, which we leave as a follow-up.
 - **Productionised stream stack.** The architecture is mapped to Kafka / MinIO / MongoDB / Postgres / Airflow (§5), but the demo runs against an append-only JSONL event log + local Parquet + DuckDB; the migration path is what §8's 10× / 100× column describes.
 - **FastAPI delivery surface.** Read-only Streamlit dashboard is shipped (URL on page 1); the documented `GET /skills?role=…` endpoint is on the roadmap.
 - **Additional Taiwan job boards (1111 / Yourator).** The scraper architecture and storage layer are source-agnostic; adding them is a `sources/*.py` adapter plus an entry in `collect.py`. We did not crawl them in this iteration to keep the corpus interpretable across two sources first.
@@ -384,7 +384,7 @@ Scraped data is used for academic analysis with rate-limiting and respect for ro
 
 ## Appendix A — Skill Taxonomy v1
 
-Eight facets; ★ marks the "AI-era signal" layer used to measure the AI shift. **This v1 is a hypothesis to validate against scraped JDs** (top-down seed, then bottom-up reconciliation: add missed skills, filter buzzwords, canonicalize synonyms).
+Nine facets, 88 canonical skills. ★ marks the "AI-era signal" facets used to measure the AI shift. Facet 9 (web/backend) does not contribute to the cluster's value vocabulary; it exists specifically to help the role classifier discriminate the Backend Engineer control group from cluster roles. **This v1 is a hypothesis to validate against scraped JDs** (top-down seed, then bottom-up reconciliation: add missed skills, filter buzzwords, canonicalize synonyms).
 
 | # | Facet | Example canonical skills |
 |---|---|---|
@@ -393,9 +393,10 @@ Eight facets; ★ marks the "AI-era signal" layer used to measure the AI shift. 
 | 3 | Classical ML | scikit-learn, XGBoost, statistics, feature engineering, A/B testing, experiment design |
 | 4 | Deep-learning frameworks | PyTorch, TensorFlow, CNN/RNN/Transformer |
 | 5 | ★ Generative AI / LLM | LLM, RAG, prompt engineering, fine-tuning/LoRA, vector DB (pgvector/Milvus), embeddings, LangChain/LlamaIndex, agents, model APIs (OpenAI/Claude/Gemini) |
-| 6 | ★ MLOps / deployment | Docker, Kubernetes, model serving (FastAPI/Triton/BentoML), MLflow/W&B, CI/CD, model monitoring, feature store |
+| 6 | ★ MLOps / deployment | MLflow, Weights & Biases, model serving (Triton/BentoML), model monitoring, feature store, Kubeflow. Dual-use infra (Docker, Kubernetes, FastAPI, CI/CD) lives in this facet too but is `ai_era: false` so it does not by itself flag a posting as AI-inflected. |
 | 7 | Cloud | AWS/GCP/Azure + ML services (SageMaker/Vertex/Azure ML) |
 | 8 | BI / business | Tableau/Power BI/Looker, dashboards, domain knowledge, "connect model to business outcome" (qualitative theme) |
+| 9 | Web / backend (control-group discriminators) | Node.js, Express, Django, Flask, Spring Boot, .NET, PHP, REST API, microservices. Not part of the cluster's value vocabulary; used by the classifier to recognise the Backend Engineer control group. |
 
 *Canonicalization example:* `LLM`, `大型語言模型`, `GPT`, `生成式AI`, `genAI` → **`llm`** (facet 5).
 
