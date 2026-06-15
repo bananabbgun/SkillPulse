@@ -1,0 +1,55 @@
+# SkillPulse — Syllabus Mapping for the Curriculum-Gap Overlay (Figure 6)
+# ---------------------------------------------------------------------------
+# Source: 聯成電腦 "AI 人工智慧工程師" public course outline.
+#   - Fetched from https://www.lccnet.com.tw/lccnet/ai-with-python (project window).
+#   - Each taught topic on the public page is normalised to a skill_id from
+#     taxonomy/skills_v1.yaml. Topics that have no canonical skill_id in our
+#     taxonomy v1 (e.g. Git, generic OOP, regex, web scraping) are recorded
+#     here under `untracked` so they are visible but not double-counted in
+#     the gap chart.
+#   - This file is a hypothesis, not the only possible mapping. A different
+#     bootcamp's syllabus would yield a different YAML alongside this one;
+#     the gap chart consumes one syllabus YAML at a time.
+# ---------------------------------------------------------------------------
+
+provider: "聯成電腦 (Lianchen)"
+program: "AI 人工智慧工程師 (AI Engineer)"
+source_url: "https://www.lccnet.com.tw/lccnet/ai-with-python"
+source_accessed: "2026-06-15"
+target_role: "data_engineer"   # we overlay this syllabus onto the Data Engineer demand bar
+
+# Skills explicitly taught in the program, by canonical skill_id.
+taught:
+  # Foundations
+  - python
+  - pandas
+  - numpy
+  - sql            # course teaches SQLite + relational-DB basics
+  # Classical / Deep ML
+  - scikit_learn
+  - statistics     # PCA, SVM, feature extraction count as statistics / classical ML
+  - feature_engineering
+  - machine_learning
+  - deep_learning
+  - pytorch
+  - cnn            # computer vision module covers convnets explicitly
+  - computer_vision
+  - nlp
+  # AI-era
+  - model_apis     # OpenAI API integration is covered
+  - model_serving  # "model deployment" is in the syllabus
+  # BI / Web
+  - data_viz       # Seaborn / Plotly
+  - flask
+  - django
+
+# Topics on the syllabus that don't map to a tracked skill_id. Listed for
+# transparency so the reader can see we are not silently dropping anything.
+untracked:
+  - "Git version control"
+  - "Web scraping / BeautifulSoup4 / urllib"
+  - "Regular Expressions"
+  - "HTML / JSON parsing"
+  - "Object-Oriented Programming (general)"
+  - "Anaconda environment management"
+  - "AWS DeepRacer (Reinforcement Learning)"

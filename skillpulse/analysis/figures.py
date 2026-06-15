@@ -1,14 +1,18 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 import pandas as pd
+import yaml
 
 from skillpulse.aggregation import ROLE_LABELS, ROLE_ORDER
-from skillpulse.paths import FIGURES_DIR, ensure_output_dirs
+from skillpulse.paths import FIGURES_DIR, REPO_ROOT, ensure_output_dirs
+
+
+DEFAULT_SYLLABUS_PATH = REPO_ROOT / "taxonomy" / "syllabi" / "lccnet_ai_engineer_v1.yaml"
 
 
 def write_figures(marts: Dict[str, pd.DataFrame], figures_dir: Path = FIGURES_DIR) -> None:
@@ -26,6 +30,12 @@ def write_figures(marts: Dict[str, pd.DataFrame], figures_dir: Path = FIGURES_DI
         figures_dir / "figure5_skill_demand_data_engineer.png",
         focus_role="data_engineer",
     )
+    if DEFAULT_SYLLABUS_PATH.exists():
+        write_figure_6(
+            marts["role_skill_demand"],
+            figures_dir / "figure6_curriculum_gap.png",
+            syllabus_path=DEFAULT_SYLLABUS_PATH,
+        )
 
 
 def write_figure_1(df: pd.DataFrame, path: Path) -> None:
@@ -126,4 +136,117 @@ def write_figure_3(
     fig.tight_layout()
     fig.savefig(path, dpi=180)
     plt.close(fig)
+
+
+def write_figure_6(
+    df: pd.DataFrame,
+    path: Path,
+    syllabus_path: Path,
+    top_foundational: int = 10,
+    top_ai_era: int = 5,
+) -> None:
+    """Curriculum-gap overlay: Figure 5's bars, recoloured by 'taught / not taught'.
+
+    Reads a syllabus YAML (taught skill_ids + provider metadata), joins it against
+    role_skill_demand for the syllabus's target role, and re-renders Figure 5's
+    mixed top-foundational + top-AI selection with two new colours: blue = taught,
+    orange = not taught. The visual question the bootcamp owner asks ("which
+    high-demand skills am I not teaching?") then maps directly to the tall orange
+    bars.
+    """
+    with syllabus_path.open("r", encoding="utf-8") as fh:
+        syllabus = yaml.safe_load(fh)
+    taught_set = set(syllabus.get("taught", []))
+    target_role = syllabus.get("target_role", "data_engineer")
+    provider = syllabus.get("provider", "Unknown provider")
+    program = syllabus.get("program", "Unknown program")
+
+    role_skills = df[df["role"] == target_role].copy()
+    if role_skills.empty:
+        return
+    role_skills["pct"] = role_skills["pct_of_role"] * 100
+    role_label = ROLE_LABELS.get(target_role, target_role)
+
+    foundational = (
+        role_skills[~role_skills["ai_era"]].sort_values("count", ascending=False).head(top_foundational)
+    )
+    ai_era = role_skills[role_skills["ai_era"]].sort_values("count", ascending=False).head(top_ai_era)
+    combined = pd.concat([foundational, ai_era], ignore_index=True)
+    combined = combined.sort_values("count", ascending=True).reset_index(drop=True)
+    combined["taught"] = combined["skill_id"].isin(taught_set)
+
+    fig, ax = plt.subplots(figsize=(10, 7.5))
+    # Blue = taught by the syllabus; orange = market demand the syllabus does not cover.
+    colors = ["#2563eb" if t else "#ea580c" for t in combined["taught"]]
+    ax.barh(combined["name"], combined["pct"], color=colors)
+    ax.set_xlabel("% of postings mentioning this skill")
+    # Keep the title ASCII-only; matplotlib's default font does not ship CJK glyphs
+    # so 聯成電腦 / AI 人工智慧工程師 render as boxes. The full Chinese provider /
+    # program names appear in the report caption and in the syllabus YAML.
+    ax.set_title(
+        f"Figure 6. Curriculum gap for {role_label} (one private-bootcamp syllabus)"
+    )
+    ax.set_xlim(0, max(100, combined["pct"].max() + 12))
+    for index, row in enumerate(combined.itertuples()):
+        marker = " ✓" if row.taught else "  ✗"
+        ax.text(row.pct + 1, index, f"{row.pct:.0f}%{marker}", va="center", fontsize=9)
+
+    legend_handles = [
+        Patch(facecolor="#2563eb", label="Taught by syllabus"),
+        Patch(facecolor="#ea580c", label="Not taught (market gap)"),
+    ]
+    ax.legend(handles=legend_handles, loc="lower right")
+    fig.tight_layout()
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+
+
+def compute_curriculum_gap_summary(
+    df: pd.DataFrame,
+    syllabus_path: Path = DEFAULT_SYLLABUS_PATH,
+    top_foundational: int = 10,
+    top_ai_era: int = 5,
+) -> Optional[Dict[str, object]]:
+    """Compute summary stats for the report / dashboard caption.
+
+    All counts are taken over the same skill set the gap chart visualises:
+    the role's top-N foundational + top-K AI-era skills.
+    """
+    if not syllabus_path.exists():
+        return None
+    with syllabus_path.open("r", encoding="utf-8") as fh:
+        syllabus = yaml.safe_load(fh)
+    taught_set = set(syllabus.get("taught", []))
+    target_role = syllabus.get("target_role", "data_engineer")
+    role_skills = df[df["role"] == target_role].copy()
+    if role_skills.empty:
+        return None
+
+    foundational = (
+        role_skills[~role_skills["ai_era"]].sort_values("count", ascending=False).head(top_foundational)
+    )
+    ai_era = role_skills[role_skills["ai_era"]].sort_values("count", ascending=False).head(top_ai_era)
+    chart = pd.concat([foundational, ai_era], ignore_index=True)
+    chart["taught"] = chart["skill_id"].isin(taught_set)
+    chart_ai = chart[chart["ai_era"]]
+    chart_found = chart[~chart["ai_era"]]
+
+    # The biggest single uncovered AI-era skill is the headline call-to-action.
+    not_taught_ai = chart_ai[~chart_ai["taught"]].sort_values("count", ascending=False)
+    biggest_uncovered_ai = (
+        f"{not_taught_ai.iloc[0]['name']} ({not_taught_ai.iloc[0]['pct_of_role']*100:.0f}%)"
+        if not not_taught_ai.empty else "—"
+    )
+
+    return {
+        "provider": syllabus.get("provider", ""),
+        "program": syllabus.get("program", ""),
+        "target_role": target_role,
+        "n_taught_total": len(taught_set),
+        "foundational_taught": int(chart_found["taught"].sum()),
+        "foundational_total": int(len(chart_found)),
+        "ai_era_taught": int(chart_ai["taught"].sum()),
+        "ai_era_total": int(len(chart_ai)),
+        "biggest_uncovered_ai": biggest_uncovered_ai,
+    }
 

@@ -37,6 +37,9 @@ def main() -> None:
     print(f"Figures: {FIGURES_DIR / 'figure3_ai_penetration.png'}")
     print(f"Figures: {FIGURES_DIR / 'figure4_ai_premium_vs_backend.png'}")
     print(f"Figures: {FIGURES_DIR / 'figure5_skill_demand_data_engineer.png'}")
+    fig6 = FIGURES_DIR / 'figure6_curriculum_gap.png'
+    if fig6.exists():
+        print(f"Figures: {fig6}")
 
 
 if __name__ == "__main__":
