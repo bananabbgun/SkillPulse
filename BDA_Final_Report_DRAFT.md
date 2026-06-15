@@ -10,13 +10,13 @@
 | **Live demo (bonus)** | `https://skillpulse-gslw7hdztc85xs3qp3qihn.streamlit.app` |
 | **Date** | `2026-06-15` |
 
-> **How to read this report.** Section 11 summarises what this iteration ships vs what is deliberately deferred. The single remaining `[TODO]` marker (in §6, Figure 4) covers a deferred bonus — a curriculum-gap overlay between a public syllabus and the role's skill-demand chart — and is left as a method definition rather than executed in this iteration. The report is exported as a single PDF named `<student_id>.pdf`, in English, with the GitHub URL and live-demo URL on page 1.
+> **Reading guide.** §1–§4 cover the product thesis, target customer, scope, and demand evidence (Required Components 1 and 2). §5–§6 cover the technical system, the four-stage refinement pipeline, and the analytical results (Figures 1–3 produced; Figure 4 specified as method only). §7 (GTM) and §8 (scalability + cost) address the optional bonus components. §11 lists what this iteration ships vs what is deliberately deferred to a follow-up iteration.
 
 ---
 
 ## Abstract
 
-Raw job postings are abundant and public, but for the people who must decide *what to teach next*, they are unusable in raw form. **SkillPulse** turns the live stream of Taiwan data/AI job postings into a refined, role-resolved picture of which skills the market actually demands right now — with a deliberate lens on how generative-AI skills are being absorbed into established roles. The customer is the **small-to-mid-size vocational training provider** (private bootcamps and government-subsidized course operators), whose revenue and subsidy eligibility depend on aligning curricula to current market demand. The system ingests postings as a stream, refines them through a skill-taxonomy extraction and normalization pipeline, and delivers role-level skill-demand analytics, an "AI-skill premium" comparison, and a curriculum-gap report through a dashboard and API.
+Raw job postings are abundant and public, but for the people who must decide *what to teach next*, they are unusable in raw form. **SkillPulse** turns the live stream of Taiwan data/AI job postings into a refined, role-resolved picture of which skills the market actually demands right now — with a deliberate lens on how generative-AI skills are being absorbed into established roles. The customer is the **small-to-mid-size vocational training provider** (private bootcamps and government-subsidized course operators), whose revenue and subsidy eligibility depend on aligning curricula to current market demand. The system ingests postings, refines them through a skill-taxonomy extraction and normalization pipeline, and delivers role-level skill-demand analytics and an "AI-skill premium" comparison through a read-only Streamlit dashboard.
 
 ---
 
@@ -61,7 +61,7 @@ Every cohort, a training provider must decide which skills to teach and must jus
 - Under the *Industry Elite Pioneer Program*, courses must conform to 5+2 industry priorities; training units include foundations, trade/industry associations, and colleges — i.e., many small operators without in-house data teams. (Industry Elite Pioneer Program, 2026)
 - Private operators already market on skill demand (e.g., 聯成電腦 publishes "which jobs are short-staffed in 2026" recruitment content), proving they need ammunition our product supplies. (聯成電腦, 2026)
 
-Together, these three signals — a government program with an active subsidy budget, a regulatory requirement that courses align to declared industry priorities, and incumbent operators already marketing on demand — establish that the buyer exists and has a recurring, money-backed reason to consume role-resolved skill-demand intelligence. We do **not** rely on primary interviews in this iteration of the project; the demand-side argument rests on these public, citable signals plus the willingness-to-pay anchors in §4.3.
+Together, these three signals — a government program with an active subsidy budget, a regulatory requirement that courses align to declared industry priorities, and incumbent operators already marketing on demand — establish that the buyer exists and has a recurring, money-backed reason to consume role-resolved skill-demand intelligence. The willingness-to-pay anchors in §4.3 then size what they would plausibly spend on it.
 
 ---
 
@@ -132,7 +132,7 @@ We triangulate WTP from analogous paid products and from the money at stake per 
 | Coding bootcamp tuition | < ~NT$40,000 per student (e.g., 聯成) | Revenue scale a single cohort represents |
 | Gov subsidy per trainee (Elite Pioneer) | Up to **NT$100,000** training fee + up to **NT$96,000** stipend = up to **NT$196,000 per trainee** | The money a provider is fighting to qualify for — the decision SkillPulse de-risks |
 
-**Derived WTP hypothesis (analog-based).** A provider running cohorts of ~20 trainees with up to ~NT$196k of subsidy flowing per trainee is making a six-to-seven-figure decision each cohort. Triangulating against the anchors above — individuals already pay NT$150–690 for thinner labour data, and a global analog (Lightcast) monetises exactly this analytics category as an enterprise subscription — a B2B report or subscription that materially improves course-market fit and subsidy-approval odds is plausibly worth on the order of **a few thousand NT$ per provider per month**. We treat this as a hypothesis derived from analogous pricing rather than from primary interviews; tightening the number into a confirmed price band is explicitly listed as next-iteration work in §11.
+**Derived WTP hypothesis (analog-based).** A provider running cohorts of ~20 trainees with up to ~NT$196k of subsidy flowing per trainee is making a six-to-seven-figure decision each cohort. Triangulating against the anchors above — individuals already pay NT$150–690 for thinner labour data, and a global analog (Lightcast) monetises exactly this analytics category as an enterprise subscription — a B2B report or subscription that materially improves course-market fit and subsidy-approval odds is plausibly worth on the order of **a few thousand NT$ per provider per month**.
 
 The unit-economics implication is checked against the §8 cost sketch: at a single-customer monthly run-cost of ≈ NT$1,900 (MVP scale), break-even on a NT$3,000-per-month subscription occurs at customer #1, and the business scales on customer count rather than infrastructure depth.
 
@@ -150,13 +150,14 @@ Reproducible steps (scripts in `repo/ingestion/`, see Section 9):
 
 ### 5.1 Data sources
 
-| Source | What we ingest | How |
-|---|---|---|
-| 104 人力銀行 | Postings for cluster + control roles: title, company, JD text, required skills, salary (when numeric), location, posted date | JSON `list` XHR endpoint (+ `Referer`); detail fetch per job |
-| Cake (cake.me) | Same fields, especially AI-titled roles | Playwright (JS-rendered) |
-| 1111 / Yourator *(optional, breadth)* | Same | Scraper |
-| Gov salary reference (DGBAS 薪情平臺) | Authoritative salary distributions for sanity-checking | Public download |
-| Training-provider syllabi (public) | Course skill lists for gap analysis | Manual + `web_fetch` |
+Two job boards were used in this iteration. The "additional sources" row records boards that the architecture is ready for but that we did not crawl in this iteration; the syllabus source is the one Figure 4 (deferred bonus) would consume.
+
+| Source | What we ingest | How | Used this iteration |
+|---|---|---|---|
+| 104 人力銀行 | Postings for cluster + control roles: title, company, JD text, required skills, salary (when numeric), location, posted date | XHR `list` endpoint with `Referer` warming; CDP attach to a user-launched Chrome when Cloudflare blocks the raw HTTP path | ✓ 382 postings |
+| Cake (cake.me) | Same fields, especially AI-titled and startup roles | Playwright headless; lazy-scroll on the search page to expand the result set | ✓ 180 postings |
+| 1111 / Yourator (additional Taiwan boards) | Same posting fields | Same Playwright pattern as Cake | Deferred — architecture-ready |
+| Training-provider syllabi (public) | Course skill lists for gap analysis | Manual collection + skill-id mapping YAML | Deferred — feeds Figure 4 |
 
 ### 5.2 Technology stack and why (mapped to course paradigms)
 
@@ -186,7 +187,9 @@ The honest fact first: this corpus is **hundreds of thousands of postings, not p
 
 ### 5.4 Delivery
 
-A read-only **Streamlit dashboard** (role selector → demand charts, AI-premium, gap map) plus a **FastAPI** endpoint (e.g., `GET /skills?role=data_engineer` returns ranked skills with demand and AI-flag) for the "API delivery" requirement.
+A read-only **Streamlit dashboard** is the live delivery surface in this iteration — role selector → headline metrics, AI vs non-AI salary premium callout, skill-demand bar chart with AI-era skills highlighted in red, sample postings table, and a cross-cluster AI-penetration chart for context. Deployed to Streamlit Community Cloud; URL on page 1.
+
+A read-only **FastAPI** query API (e.g., `GET /skills?role=data_engineer` returning the same role-skill-demand mart in JSON) is documented as the second delivery surface, but it is **deferred to a follow-up iteration** (§11). The marts that would back it are already published as CSV / Parquet / DuckDB in the same shape the API would serve, so adding the FastAPI layer is purely a thin wrapper job rather than a structural change.
 
 ![Figure 2 — End-to-end SkillPulse architecture: Ingestion (104 / Cake scrapers writing to an event log) → Storage (Mongo / Parquet on object storage, with DuckDB + CSV marts in the MVP) → Processing (Apache Spark running the four-stage refinement: taxonomy match, salary parser, skill-fingerprint role classification, mart aggregation) → Delivery (Streamlit dashboard shipped today; FastAPI query API planned).](docs/figures/BDAfinal_arch-1.png)
 
@@ -196,18 +199,13 @@ A read-only **Streamlit dashboard** (role selector → demand charts, AI-premium
 
 ## 6. Analysis Method and Results
 
-Method is specified; figures populate once the pipeline runs. Each figure doubles as product output and as demand evidence (Section 4).
-
-| # | Figure | Claim it earns |
-|---|---|---|
-| 1 | AI-penetration rate per role (bar/heatmap) | "AI is now baseline across the whole cluster" — cross-sectional proof of the demand shift |
-| 2 | AI-premium: AI vs non-AI salary & skill count per role, with Backend as a control lane | "AI skills carry a measurable premium" — the money chart |
-| 3 | Top-skill ranking / co-occurrence network for the focus role (AI-era skills highlighted) | "AI skills are bundled into the role, not optional" |
-| 4 | Curriculum-gap map (x = market demand frequency, y/color = taught or not) | The actionable gap — justifies WTP |
+Each figure doubles as a product output and as part of the demand evidence in §4. The full set is generated by `python -m skillpulse.run_all`; Figures 1 and 2 are PNGs in `output/figures/`, Figure 3 is rendered interactively by the dashboard from `output/marts/role_skill_demand.csv`, and Figure 4 is method-only in this iteration.
 
 ### Figure 1 — AI Penetration by Role
 
-> *(Output of `python -m skillpulse.run_all`; image at `output/figures/figure1_ai_penetration.png`.)*
+![Figure 1 — AI-inflected share of postings per role, ranked. AI Engineer is 100% by construction; ML Engineer 58%; Data Scientist 36%; the MVP focus role Data Engineer 29% (teal-highlighted); Backend control 19%; Algorithm Engineer 14%; Data Analyst 7%. n shown above each bar.](output/figures/figure1_ai_penetration.png)
+
+**Figure 1.** AI-inflected share by role across 562 postings (output of `python -m skillpulse.run_all`). The teal bar marks the MVP focus role (Data Engineer); all others are grey.
 
 | Role | n | AI-inflected share |
 |---|---:|---:|
@@ -223,7 +221,9 @@ Method is specified; figures populate once the pipeline runs. Each figure double
 
 ### Figure 2 — AI Salary Premium vs Backend Control
 
-> *(Image at `output/figures/figure2_ai_premium_vs_backend.png`. Medians use only postings whose salary parsed to a numeric NTD value; "面議" / negotiable is dropped, so n_salary_known < n_postings.)*
+![Figure 2 — Median monthly salary in NTD, paired non-AI vs AI-inflected per role. ML Engineer shows the clearest within-role premium (NT$52k vs NT$78k, +50%); Data Engineer +22%; Data Scientist −6% (inside noise). Backend control inverts to −27% (NT$86k vs NT$63k). n above each bar; cells with no opposite-side n leave that bar blank.](output/figures/figure2_ai_premium_vs_backend.png)
+
+**Figure 2.** AI salary premium within each role. Medians use only salary-known postings ("面議" / negotiable dropped). n is shown for each cell. Sub-groups with n < 8 are not interpretable on their own and are called out individually in the text below.
 
 | Role | non-AI median (n) | AI-inflected median (n) | Premium |
 |---|---|---|---:|
@@ -239,9 +239,11 @@ Method is specified; figures populate once the pipeline runs. Each figure double
 
 ### Figure 3 — Skill Demand for the Focus Role (Data Engineer)
 
-> *(`output/marts/role_skill_demand.csv` filtered to role = data_engineer; the dashboard renders this as an interactive bar with AI-era skills highlighted.)*
+![Figure 3 — Horizontal bar chart of skill demand for Data Engineer (n=68 postings). Top 10 foundational skills shown in teal: Python 81%, SQL 75%, ETL/ELT 72%, GCP 53%, AWS 41%, Spark 41%, ML general 34%, Azure 32%, Kubernetes 26%, Airflow 26%. Top 5 AI-era skills shown in red below: LLM 16%, RAG 9%, AI Agents 9%, Vector Database 6%, Model Serving 4%.](output/figures/figure3_skill_demand_data_engineer.png)
 
-Top 10 skills demanded across the 68 Data Engineer postings (% = share of postings mentioning each):
+**Figure 3.** Skill demand for Data Engineer, split into the top 10 foundational skills (teal) and the top 5 AI-era skills (red). A pure top-15 ranking would not surface any red bar because foundational skills dominate the head of the distribution — splitting the legend this way exposes the AI signal that the curriculum-design argument depends on. Tables of the same numbers follow.
+
+Top 10 foundational skills demanded across the 68 Data Engineer postings (% = share of postings mentioning each):
 
 | Rank | Skill | Facet | AI-era | % of postings |
 |---:|---|---:|:---:|---:|
@@ -267,18 +269,18 @@ The leading AI-era skills inside the same role (Facet 5/6) are:
 
 **Interpretation.** The Data Engineer skill bundle is still anchored to the classic spine — Python · SQL · ETL · multi-cloud (GCP > AWS > Azure) · Spark / Airflow — and that core dominates the top of the chart. The AI layer has not yet displaced the spine, but it has clearly arrived: **roughly 1 in 6 Data Engineer JDs (16 %) explicitly require Large Language Models**, with RAG and AI Agents trailing in the high single digits. This is the curriculum signal a bootcamp can act on directly: keep the SQL/ETL/cloud backbone, and start adding an LLM / RAG / vector-store module before that 16 % grows into the 30–40 % band where ML Engineer already sits.
 
-### Figure 4 — Curriculum-gap analysis
+### Figure 4 — Curriculum-gap analysis (deferred)
 
-`[TODO — DEFERRED BONUS: fetch one or two public syllabi (Elite Pioneer / a private bootcamp) and overlay them on Figure 3's demand bar. Implementation sketch: a YAML of taught skill_ids → join against role_skill_demand and colour by `taught ∈ {yes, no}`. Until executed, this is left as a method definition.]`
+**Method (specified, not executed in this iteration).** Take a public syllabus from a Taiwanese training provider (e.g. an Elite Pioneer programme or a private bootcamp), map each taught topic to a canonical skill_id in our taxonomy, then overlay the resulting "taught / not taught" flag onto Figure 3's role-skill demand bar. The "high-demand-but-not-taught" skills — especially AI-era ones — are the actionable gap the customer pays for. Implementation sketch: a YAML of taught skill_ids per syllabus, joined against `role_skill_demand.csv`, coloured by `taught ∈ {yes, no}`. This bonus is recorded in §11 as deferred.
 
 ---
 
 **Sample-size and salary-sparsity reality check.** Of the 562 postings, **186 (33 %) parsed to a numeric monthly salary** — the remainder list "面議" / "待遇面議" / "negotiable." This is the dominant constraint on Figure 2: the cells that survive are only those where each (role, AI-flag) sub-group has enough numeric rows. Cake is the better salary signal (**38 % of Cake postings are numeric, vs 31 % of 104**), which is why expanding the Cake share from 21 % to 32 % of the corpus shifted Figure 2's Data Engineer cell from −25 % (n = 3 vs 5) to +22 % (n = 8 vs 17) — i.e. the headline number tracks sample maturity, and a longitudinal scrape (Section 8) is what stabilises it.
 
-**Honesty notes to keep in the report (do not hide):**
-- *Salary sparsity:* many postings list salary as "negotiable," shrinking Figure 2's sample — report n and confidence intervals, and use *skill count* as a robustness proxy.
-- *Seniority confound:* senior roles tend to be both more AI-heavy and higher-paid; stratify by seniority where the JD allows, otherwise state the limitation explicitly.
-- *Snapshot aging:* a snapshot dates quickly — a feature for a subscription product, immaterial for the demo; the longitudinal value is argued under scalability (Section 8).
+**Stated limitations.** Three limitations are kept explicit and report-level, not hidden:
+- *Salary sparsity.* Many postings list salary as "negotiable," so Figure 2's medians are computed off the salary-known subset only; we report n alongside every cell, and treat sub-groups with n < 8 as not interpretable.
+- *Seniority confound.* Senior roles tend to be both more AI-heavy and higher-paid; the report does not currently stratify by seniority, so a portion of the AI premium in Figure 2 is co-mingled with seniority effects.
+- *Snapshot aging.* A single cross-sectional scrape dates quickly; longitudinal value is argued under scalability (§8) and is not claimed for this snapshot.
 
 ---
 
@@ -315,22 +317,42 @@ The leading AI-era skills inside the same role (Facet 5/6) are:
 
 ## 9. Deliverables and Repository
 
-**Repository layout (proposed):**
+**Repository layout (actual).**
+
 ```
-skillpulse/
-├── README.md                  # run locally + access deployed demo
-├── docker-compose.yml         # Kafka, MinIO, MongoDB, Postgres, Airflow, app
-├── ingestion/                 # scrapers + repro data-collection scripts
-│   ├── collect.py
-│   └── sources/{job104.py,cake.py}
-├── taxonomy/skills_v1.yaml    # canonical skill dictionary (Appendix A)
-├── processing/                # PySpark jobs: extract, classify, aggregate
-├── analysis/                  # figure-generation notebooks/scripts
-├── api/                       # FastAPI service
-├── dashboard/                 # Streamlit app
-└── data/sample/               # small sample dataset for graders
+SkillPulse/
+├── README.md                            # local run + deploy + reproduction
+├── BDA_Final_Report_DRAFT.md            # this report
+├── Makefile                             # `make sample / dashboard / test / ...`
+├── requirements.txt                     # core deps (pydantic, pandas, streamlit, ...)
+├── requirements-scraping.txt            # adds Playwright (live collection)
+├── requirements-spark.txt               # adds PySpark (opt-in for local Spark mode)
+├── docker-compose.yml                   # optional single-broker Redpanda for the Kafka demo
+├── skillpulse/                          # core Python package
+│   ├── schema.py                        # data contract + TW salary parser
+│   ├── taxonomy.py                      # YAML loaders for skills_v1 / roles_v1
+│   ├── extraction.py                    # taxonomy dictionary matcher
+│   ├── classification.py                # role classifier by skill fingerprint
+│   ├── aggregation.py                   # mart builders (CSV / Parquet / DuckDB)
+│   ├── run_all.py                       # end-to-end pipeline entry point
+│   ├── paths.py                         # canonical paths used by every module
+│   ├── ingestion/
+│   │   ├── collect.py                   # CLI: `python -m skillpulse.ingestion.collect ...`
+│   │   ├── events.py                    # append-only JSONL event log (Kafka stand-in)
+│   │   └── sources/{job104.py, cake.py} # the two scrapers
+│   ├── processing/pipeline.py           # raw → normalized (Spark local / pandas fallback)
+│   ├── analysis/figures.py              # matplotlib Figures 1 + 2
+│   └── dashboard/app.py                 # Streamlit one-page brief
+├── taxonomy/
+│   ├── skills_v1.yaml                   # canonical skill dictionary (Appendix A)
+│   └── roles_v1.yaml                    # role prototypes for the classifier
+├── tests/                               # pytest — extractor + salary-parser invariants
+├── data/sample/postings_sample.json     # 26 offline fixtures for `--sample`
+├── docs/figures/                        # the two author-rendered diagrams
+└── output/marts/, output/figures/       # snapshot of the published 562-posting run
 ```
-**README must include:** one-command local run, deployed URL, and reproduction of the data-collection step. The current `README.md` documents (a) `--sample` for an offline, zero-credential demo run, (b) the live `collect.py` invocation per source, and (c) the manual-URL fallback for 104 when Cloudflare blocks the JSON path. Repro was verified with a fresh `git clone` of this repo against an empty Python environment: `pip install -r requirements.txt` → `python -m skillpulse.run_all --sample` produces all marts and Figures 1/2 in pandas-fallback mode, and `python -m pytest tests` passes (7 tests).
+
+**Reproducibility.** The README documents (a) `--sample` for an offline, zero-credential demo run, (b) the live `collect.py` invocation per source (including the 104 manual-URL fallback when Cloudflare blocks the JSON path), and (c) the dashboard launch. Repro was verified end-to-end from a fresh `git clone` against an empty Python environment: `pip install -r requirements.txt` → `python -m skillpulse.run_all --sample` produces all marts and Figures 1 / 2 in pandas-fallback mode, and `python -m pytest tests` passes (7 tests).
 
 ---
 
@@ -353,15 +375,10 @@ Scraped data is used for academic analysis with rate-limiting and respect for ro
 - **Cost model.** Three-scale back-of-envelope (demo / MVP / 100×) tied to published AWS and Anthropic prices (§8).
 
 ### Deliberately deferred (acknowledged scope)
-- **Primary interviews.** The §4 argument rests on public, citable signals plus analog-based WTP anchors; primary interviews are listed as next-iteration validation work rather than treated as the load-bearing evidence.
 - **Figure 4 (curriculum-gap overlay).** Method is specified in §6; implementation requires picking one or two public syllabi to map onto the taxonomy, which we leave as a follow-up.
 - **Productionised stream stack.** The architecture is mapped to Kafka / MinIO / MongoDB / Postgres / Airflow (§5), but the demo runs against an append-only JSONL event log + local Parquet + DuckDB; the migration path is what §8's 10× / 100× column describes.
-- **FastAPI delivery surface.** Read-only Streamlit dashboard is shipped; the documented `GET /skills?role=…` endpoint is on the roadmap.
-
-### Identity / submission logistics (page 1)
-- GitHub repo URL must appear on page 1 (see header table).
-- Final PDF named `<student_id>.pdf`, in English.
-- If a live demo is deployed, its URL is added to the header table.
+- **FastAPI delivery surface.** Read-only Streamlit dashboard is shipped (URL on page 1); the documented `GET /skills?role=…` endpoint is on the roadmap.
+- **Additional Taiwan job boards (1111 / Yourator).** The scraper architecture and storage layer are source-agnostic; adding them is a `sources/*.py` adapter plus an entry in `collect.py`. We did not crawl them in this iteration to keep the corpus interpretable across two sources first.
 
 ---
 
@@ -381,73 +398,6 @@ Eight facets; ★ marks the "AI-era signal" layer used to measure the AI shift. 
 | 8 | BI / business | Tableau/Power BI/Looker, dashboards, domain knowledge, "connect model to business outcome" (qualitative theme) |
 
 *Canonicalization example:* `LLM`, `大型語言模型`, `GPT`, `生成式AI`, `genAI` → **`llm`** (facet 5).
-
----
-
-## Appendix B — Interview Instrument (designed; not executed in this iteration)
-
-This iteration's demand-side argument relies on public, citable signals (§4.2) and analog-based WTP anchors (§4.3) rather than primary interviews. The instrument below is preserved so that a follow-up iteration can run it without redesigning the questionnaire.
-
-**Target respondent:** course planner or subsidy-application owner at a small/mid training provider.
-
-**Screening:** Do you decide or influence which skills a course teaches? Do you prepare subsidy applications?
-
-**Core questions:**
-1. Walk me through how you decided the curriculum for your most recent data/AI course. Who decided, based on what?
-2. What sources did you use to judge "what the market wants"? How fresh were they?
-3. When you apply for subsidy, how do you demonstrate the course matches market demand?
-4. What's the most painful/uncertain part of getting curriculum-market fit right?
-5. Have you ever taught something that turned out to be off-market, or missed something hot? What did it cost you (enrollment, placement, subsidy)?
-6. If a tool gave you a fresh, role-level skill-demand list plus a gap analysis against your syllabus, where would it fit your workflow?
-7. What would you pay for that — per report, or monthly subscription? At what price would it be a clear yes? A clear no?
-8. What would make you *not* trust it?
-
-**Capture (for next-iteration execution):** record at least one explicit price point per respondent and feed it back into §4.3.
-
----
-
-## Appendix C — Claude Design Prompt for the SYSTEM ARCHITECTURE Diagram (Figure 2)
-
-> Note: this is the **second** diagram (data flow), different from the scope diagram (Figure 1).
-
-```text
-Create a clean, professional end-to-end SYSTEM ARCHITECTURE diagram for an academic
-Big Data Systems final-project report. English labels. Left-to-right data flow,
-landscape, export-ready for a PDF report. Group nodes into four labeled stages.
-
-TITLE: "SkillPulse — End-to-End Architecture"
-
-STAGE 1 — INGESTION
-- "Scrapers (104 / Cake)" → emits events to
-- "Apache Kafka — topic: raw-postings"
-- Orchestrated by "Apache Airflow" (show as a scheduler controlling the flow)
-
-STAGE 2 — STORAGE
-- "MongoDB (raw JSON, NoSQL)"
-- "Data Lake — Parquet on MinIO"
-
-STAGE 3 — PROCESSING (Apache Spark)
-- "Spark Structured Streaming (incremental)"
-- "Skill Extraction + Taxonomy match"
-- "LLM Normalization (canonical skills)"
-- "Role Classification (skill fingerprint)"
-- "Aggregation → marts"
-- output to "PostgreSQL (serving / OLAP)"
-
-STAGE 4 — DELIVERY
-- "FastAPI (query API)"
-- "Streamlit Dashboard (read-only)"
-- end node: "Customer: training provider"
-
-ANNOTATIONS
-- Small italic note under Stage 1: "new postings modeled as a stream (velocity)"
-- Small italic note under Stage 3: "the 'raw → refined' core"
-- Show all containers wrapped by a thin dashed box labeled "Docker Compose"
-
-STYLE: modern, restrained, academic. One accent color for the processing stage
-(the core value), neutral elsewhere. Clear arrows, generous whitespace, legible
-sans-serif, no decorative icons. Must read clearly at half-page landscape scale.
-```
 
 ---
 

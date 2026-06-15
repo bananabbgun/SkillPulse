@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict
 
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 import pandas as pd
 
 from skillpulse.aggregation import ROLE_LABELS, ROLE_ORDER
@@ -15,6 +16,11 @@ def write_figures(marts: Dict[str, pd.DataFrame], figures_dir: Path = FIGURES_DI
     figures_dir.mkdir(parents=True, exist_ok=True)
     write_figure_1(marts["role_ai_penetration"], figures_dir / "figure1_ai_penetration.png")
     write_figure_2(marts["ai_premium"], figures_dir / "figure2_ai_premium_vs_backend.png")
+    write_figure_3(
+        marts["role_skill_demand"],
+        figures_dir / "figure3_skill_demand_data_engineer.png",
+        focus_role="data_engineer",
+    )
 
 
 def write_figure_1(df: pd.DataFrame, path: Path) -> None:
@@ -65,6 +71,53 @@ def write_figure_2(df: pd.DataFrame, path: Path) -> None:
             value = series.loc[role]
             if pd.notna(value):
                 ax.text(pos + offset, value + 2500, f"n={n_lookup.get((role, group), 0)}", ha="center", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+
+
+def write_figure_3(
+    df: pd.DataFrame,
+    path: Path,
+    focus_role: str,
+    top_foundational: int = 10,
+    top_ai_era: int = 5,
+) -> None:
+    """Skill demand for one role, with both foundational and AI-era skills represented.
+
+    Pure top-N hides the AI signal when foundational skills dominate the head of the
+    distribution. We instead show the top-N foundational PLUS the top-K AI-era skills
+    so the curriculum-gap argument in the report is visually grounded.
+    """
+    role_skills = df[df["role"] == focus_role].copy()
+    if role_skills.empty:
+        return
+    role_skills["pct"] = role_skills["pct_of_role"] * 100
+    role_label = ROLE_LABELS.get(focus_role, focus_role)
+
+    foundational = (
+        role_skills[~role_skills["ai_era"]].sort_values("count", ascending=False).head(top_foundational)
+    )
+    ai_era = role_skills[role_skills["ai_era"]].sort_values("count", ascending=False).head(top_ai_era)
+    combined = pd.concat([foundational, ai_era], ignore_index=True)
+    combined = combined.sort_values("count", ascending=True).reset_index(drop=True)
+
+    fig, ax = plt.subplots(figsize=(10, 7.5))
+    colors = ["#dc2626" if ai else "#0f766e" for ai in combined["ai_era"]]
+    ax.barh(combined["name"], combined["pct"], color=colors)
+    ax.set_xlabel("% of postings mentioning this skill")
+    ax.set_title(
+        f"Figure 3. Skill demand for {role_label} — top {top_foundational} foundational + top {top_ai_era} AI-era"
+    )
+    ax.set_xlim(0, max(100, combined["pct"].max() + 8))
+    for index, row in enumerate(combined.itertuples()):
+        ax.text(row.pct + 1, index, f"{row.pct:.0f}%", va="center", fontsize=9)
+
+    legend_handles = [
+        Patch(facecolor="#dc2626", label="AI-era skill (Facets 5–6)"),
+        Patch(facecolor="#0f766e", label="Foundational skill"),
+    ]
+    ax.legend(handles=legend_handles, loc="lower right")
     fig.tight_layout()
     fig.savefig(path, dpi=180)
     plt.close(fig)
