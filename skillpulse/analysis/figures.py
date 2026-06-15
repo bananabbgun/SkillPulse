@@ -12,13 +12,18 @@ from skillpulse.paths import FIGURES_DIR, ensure_output_dirs
 
 
 def write_figures(marts: Dict[str, pd.DataFrame], figures_dir: Path = FIGURES_DIR) -> None:
+    """Render the three pipeline-produced figures.
+
+    File names use the report's global numbering (Fig 1 = scope, Fig 2 = architecture
+    are author-drawn diagrams in docs/figures/, so this module produces 3, 4, 5).
+    """
     ensure_output_dirs()
     figures_dir.mkdir(parents=True, exist_ok=True)
-    write_figure_1(marts["role_ai_penetration"], figures_dir / "figure1_ai_penetration.png")
-    write_figure_2(marts["ai_premium"], figures_dir / "figure2_ai_premium_vs_backend.png")
+    write_figure_1(marts["role_ai_penetration"], figures_dir / "figure3_ai_penetration.png")
+    write_figure_2(marts["ai_premium"], figures_dir / "figure4_ai_premium_vs_backend.png")
     write_figure_3(
         marts["role_skill_demand"],
-        figures_dir / "figure3_skill_demand_data_engineer.png",
+        figures_dir / "figure5_skill_demand_data_engineer.png",
         focus_role="data_engineer",
     )
 
@@ -31,7 +36,7 @@ def write_figure_1(df: pd.DataFrame, path: Path) -> None:
     colors = ["#0f766e" if role == "data_engineer" else "#64748b" for role in plot_df["role"]]
     ax.bar(plot_df["role_label"], plot_df["share_pct"], color=colors)
     ax.set_ylabel("AI-inflected postings (%)")
-    ax.set_title("Figure 1. AI Penetration by Role")
+    ax.set_title("Figure 3. AI Penetration by Role")
     ax.set_ylim(0, max(100, plot_df["share_pct"].max() + 10))
     ax.tick_params(axis="x", rotation=30)
     for index, row in enumerate(plot_df.itertuples()):
@@ -57,7 +62,7 @@ def write_figure_2(df: pd.DataFrame, path: Path) -> None:
     ax.bar([pos - width / 2 for pos in x], non_ai_vals, width=width, label="Non-AI", color="#94a3b8")
     ax.bar([pos + width / 2 for pos in x], ai_vals, width=width, label="AI-inflected", color="#0f766e")
     ax.set_ylabel("Median monthly salary (NTD)")
-    ax.set_title("Figure 2. AI Salary Premium vs Backend Control")
+    ax.set_title("Figure 4. AI Salary Premium vs Backend Control")
     ax.set_xticks(list(x))
     ax.set_xticklabels(labels, rotation=30, ha="right")
     ax.legend()
@@ -107,7 +112,7 @@ def write_figure_3(
     ax.barh(combined["name"], combined["pct"], color=colors)
     ax.set_xlabel("% of postings mentioning this skill")
     ax.set_title(
-        f"Figure 3. Skill demand for {role_label} — top {top_foundational} foundational + top {top_ai_era} AI-era"
+        f"Figure 5. Skill demand for {role_label} — top {top_foundational} foundational + top {top_ai_era} AI-era"
     )
     ax.set_xlim(0, max(100, combined["pct"].max() + 8))
     for index, row in enumerate(combined.itertuples()):

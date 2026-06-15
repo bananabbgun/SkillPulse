@@ -199,11 +199,11 @@ A read-only **FastAPI** query API (e.g., `GET /skills?role=data_engineer` return
 
 ## 6. Analysis Method and Results
 
-Figures 3, 4, and 5 are pipeline outputs (Figures 1 and 2 in §3 and §5 are the scope and architecture diagrams). Figure 6 is the curriculum-gap overlay and is specified as method-only in this iteration. All three result figures are produced by `python -m skillpulse.run_all` as PNGs in `output/figures/`; Figure 5 is also rendered interactively by the dashboard from `output/marts/role_skill_demand.csv`.
+Figures 3, 4, and 5 are pipeline outputs (Figures 1 and 2 in §3 and §5 are the author-drawn scope and architecture diagrams). All three result figures are produced as static PNGs by `python -m skillpulse.run_all` (saved to `output/figures/figure{3,4,5}_*.png`). Figure 5 has a second, interactive rendering in the Streamlit dashboard so the user can switch the focus role; the static PNG in this report uses Data Engineer as the focus, matching the MVP scope. Figure 6 (curriculum-gap overlay) is the deferred bonus and is specified as method only.
 
 ### Figure 3 — AI Penetration by Role
 
-![Figure 3 — AI-inflected share of postings per role, ranked. AI Engineer is 100% (partly definitional — see interpretation); ML Engineer 58%; Data Scientist 36%; the MVP focus role Data Engineer 29% (teal-highlighted); Backend control 19%; Algorithm Engineer 14%; Data Analyst 7%. n shown above each bar.](output/figures/figure1_ai_penetration.png)
+![Figure 3 — AI-inflected share of postings per role, ranked. AI Engineer is 100% (partly definitional — see interpretation); ML Engineer 58%; Data Scientist 36%; the MVP focus role Data Engineer 29% (teal-highlighted); Backend control 19%; Algorithm Engineer 14%; Data Analyst 7%. n shown above each bar.](output/figures/figure3_ai_penetration.png)
 
 **Figure 3.** AI-inflected share by role across 562 postings. The teal bar marks the MVP focus role (Data Engineer); all others are grey.
 
@@ -221,7 +221,7 @@ Figures 3, 4, and 5 are pipeline outputs (Figures 1 and 2 in §3 and §5 are the
 
 ### Figure 4 — AI Salary Premium vs Backend Control
 
-![Figure 4 — Median monthly salary in NTD, paired non-AI vs AI-inflected per role. ML Engineer shows the clearest within-role premium (NT$52k vs NT$78k, +50%); Data Engineer +22%; Data Scientist −6% (inside noise). Backend control inverts to −27% (NT$86k vs NT$63k). n above each bar; cells with no opposite-side n leave that bar blank.](output/figures/figure2_ai_premium_vs_backend.png)
+![Figure 4 — Median monthly salary in NTD, paired non-AI vs AI-inflected per role. ML Engineer shows the clearest within-role premium (NT$52k vs NT$78k, +50%); Data Engineer +22%; Data Scientist −6% (inside noise). Backend control inverts to −27% (NT$86k vs NT$63k). n above each bar; cells with no opposite-side n leave that bar blank.](output/figures/figure4_ai_premium_vs_backend.png)
 
 **Figure 4.** AI salary premium within each role. Medians use only salary-known postings ("面議" / negotiable dropped). n is shown for each cell. Sub-groups with n < 8 are not interpretable on their own and are called out individually in the text below.
 
@@ -239,7 +239,7 @@ Figures 3, 4, and 5 are pipeline outputs (Figures 1 and 2 in §3 and §5 are the
 
 ### Figure 5 — Skill Demand for the Focus Role (Data Engineer)
 
-![Figure 5 — Horizontal bar chart of skill demand for Data Engineer (n=68 postings). Top 10 foundational skills shown in teal: Python 81%, SQL 75%, ETL/ELT 72%, GCP 53%, AWS 41%, Spark 41%, ML general 34%, Azure 32%, Kubernetes 26%, Airflow 26%. Top 5 AI-era skills shown in red below: LLM 16%, RAG 9%, AI Agents 9%, Vector Database 6%, Model Serving 4%.](output/figures/figure3_skill_demand_data_engineer.png)
+![Figure 5 — Horizontal bar chart of skill demand for Data Engineer (n=68 postings). Top 10 foundational skills shown in teal: Python 81%, SQL 75%, ETL/ELT 72%, GCP 53%, AWS 41%, Spark 41%, ML general 34%, Azure 32%, Kubernetes 26%, Airflow 26%. Top 5 AI-era skills shown in red below: LLM 16%, RAG 9%, AI Agents 9%, Vector Database 6%, Model Serving 4%.](output/figures/figure5_skill_demand_data_engineer.png)
 
 **Figure 5.** Skill demand for Data Engineer, split into the top 10 foundational skills (teal) and the top 5 AI-era skills (red). A pure top-15 ranking would not surface any red bar because foundational skills dominate the head of the distribution — splitting the legend this way exposes the AI signal that the curriculum-design argument depends on. Tables of the same numbers follow.
 
@@ -275,7 +275,7 @@ The leading AI-era skills inside the same role (Facet 5/6) are:
 
 ---
 
-**Sample-size and salary-sparsity reality check.** Of the 562 postings, **186 (33 %) parsed to a numeric monthly salary** — the remainder list "面議" / "待遇面議" / "negotiable." This is the dominant constraint on Figure 4: the cells that survive are only those where each (role, AI-flag) sub-group has enough numeric rows. Cake is the better salary signal (**38 % of Cake postings are numeric, vs 31 % of 104**), which is why expanding the Cake share from 21 % to 32 % of the corpus shifted Figure 4's Data Engineer cell from −25 % (n = 3 vs 5) to +22 % (n = 8 vs 17) — i.e. the headline number tracks sample maturity, and a longitudinal scrape (Section 8) is what stabilises it.
+**Sample-size and salary-sparsity reality check.** Of the full 562 postings, **186 (33 %) parsed to a numeric monthly salary** — the remainder list "面議" / "待遇面議" / "negotiable". Figure 4 itself plots only the seven analysis roles (six cluster roles plus the Backend control), excluding the 50 postings classified as `other` (14 of which were salary-known). The salary-known sample that actually feeds Figure 4 is therefore **172**, distributed across the seven roles per the n columns in the table above. This sparsity is the dominant constraint on Figure 4: a (role, AI-flag) cell survives only if it has enough numeric rows. Cake is the better salary signal (**38 % of Cake postings are numeric, vs 31 % of 104**), which is why expanding the Cake share from 21 % to 32 % of the corpus shifted Figure 4's Data Engineer cell from −25 % (n = 3 vs 5) to +22 % (n = 8 vs 17) — i.e. the headline number tracks sample maturity, and a longitudinal scrape (Section 8) is what stabilises it.
 
 **Stated limitations.** Three limitations are kept explicit and report-level, not hidden:
 - *Salary sparsity.* Many postings list salary as "negotiable," so Figure 4's medians are computed off the salary-known subset only; we report n alongside every cell, and treat sub-groups with n < 8 as not interpretable.

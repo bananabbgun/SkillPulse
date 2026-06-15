@@ -18,8 +18,9 @@ After the third command, open <http://localhost:8501> in a browser.
 
 The sample run is offline: no network, no API key, no Kafka. It writes:
 
-- `output/figures/figure1_ai_penetration.png`
-- `output/figures/figure2_ai_premium_vs_backend.png`
+- `output/figures/figure3_ai_penetration.png`
+- `output/figures/figure4_ai_premium_vs_backend.png`
+- `output/figures/figure5_skill_demand_data_engineer.png`
 - `output/marts/*.csv` and `output/marts/*.parquet`
 - `data/lake/*.parquet`
 

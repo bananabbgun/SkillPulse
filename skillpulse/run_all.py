@@ -34,8 +34,9 @@ def main() -> None:
     print(f"Input: {raw_path}")
     print(f"Normalized postings: {len(postings_df)}")
     print(f"Marts: {MARTS_DIR}")
-    print(f"Figures: {FIGURES_DIR / 'figure1_ai_penetration.png'}")
-    print(f"Figures: {FIGURES_DIR / 'figure2_ai_premium_vs_backend.png'}")
+    print(f"Figures: {FIGURES_DIR / 'figure3_ai_penetration.png'}")
+    print(f"Figures: {FIGURES_DIR / 'figure4_ai_premium_vs_backend.png'}")
+    print(f"Figures: {FIGURES_DIR / 'figure5_skill_demand_data_engineer.png'}")
 
 
 if __name__ == "__main__":
